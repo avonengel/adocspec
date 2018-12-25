@@ -8,7 +8,17 @@ repositories {
 
 dependencies {
     implementation 'org.asciidoctor:asciidoctorj:1.6.0-RC.2'
+    implementation 'org.itsallcode:openfasttrace:2.2.0'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
 
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testImplementation enforcedPlatform('org.junit:junit-bom:5.3.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.hamcrest:hamcrest:2.1'
+    testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
+}
+
+test {
+    useJUnitPlatform()
 }

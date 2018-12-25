@@ -60,10 +60,14 @@ WARNING: Includes can be tricky!
 include::{build-gradle}[]
 ----
 
+[.spec]
 == Spec
 
-[spec]
-.Specification Object Short Description
+.Description
 --
 asdf
 --
+
+=== subsection in spec section?
+
+does this workß

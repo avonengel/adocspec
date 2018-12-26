@@ -8,6 +8,8 @@ import org.hamcrest.Matchers;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,20 @@ import static org.hamcrest.Matchers.notNullValue;
 public class SpecTreeProcessorTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecTreeProcessorTest.class);
+    private static Asciidoctor asciidoctor;
+    private SpecTreeProcessor underTest;
+
+    @BeforeAll
+    static void prepareAsciidoctor() {
+        asciidoctor = create();
+    }
+
+    @BeforeEach
+    void prepareSpecProcessor() {
+        asciidoctor.unregisterAllExtensions();
+        underTest = new SpecTreeProcessor();
+        asciidoctor.javaExtensionRegistry().treeprocessor(underTest);
+    }
 
     @Test
     @DisplayName("is defined by using the .spec role")
@@ -35,14 +51,9 @@ public class SpecTreeProcessorTest {
         // Arrange
         String input = "[.spec]\n" +
                 "== A specification section";
-        Asciidoctor asciidoctor = create();
-        asciidoctor.unregisterAllExtensions();
-        SpecTreeProcessor underTest = new SpecTreeProcessor();
-        asciidoctor.javaExtensionRegistry().treeprocessor(underTest);
 
         // Act
         String output = asciidoctor.convert(input, options().toFile(false));
-        LOG.info("Output: {}", output);
 
         // Assert
         List<SpecificationItem> specObjects = underTest.getSpecObjects();
@@ -59,10 +70,6 @@ public class SpecTreeProcessorTest {
             // Arrange
             String input = "[.spec,specID=feat~html-export~1]\n" +
                     "== HTML Export";
-            Asciidoctor asciidoctor = create();
-            asciidoctor.unregisterAllExtensions();
-            SpecTreeProcessor underTest = new SpecTreeProcessor();
-            asciidoctor.javaExtensionRegistry().treeprocessor(underTest);
 
             // Act
             String output = asciidoctor.convert(input, options().toFile(false));

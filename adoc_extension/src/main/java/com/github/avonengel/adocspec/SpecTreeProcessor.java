@@ -37,17 +37,15 @@ public class SpecTreeProcessor extends Treeprocessor {
 
     private void processSpecNode(StructuralNode structuralNode) {
         SpecificationItem.Builder specBuilder = SpecificationItem.builder();
-        Map<String, Object> attributes = structuralNode.getAttributes();
         specBuilder.id("test", "test", 1);
         LOG.debug("node ID: {}", structuralNode.getId());
         LOG.debug("node attributes: {}", structuralNode.getAttributes());
-        Object specID = structuralNode.getAttribute("specID");
-        LOG.debug("specID attribute: {}", specID);
         LOG.debug("node title: {}", structuralNode.getTitle());
         LOG.debug("node context: {}", structuralNode.getContext());
-        Object specIdAttributeValue = structuralNode.getAttribute("specID");
-        if(specIdAttributeValue instanceof String) {
-            specBuilder.id(SpecificationItemId.parseId((String) specIdAttributeValue));
+        Object specID = structuralNode.getAttribute("specID");
+        LOG.debug("specID attribute: {}", specID);
+        if (specID instanceof String) {
+            specBuilder.id(SpecificationItemId.parseId((String) specID));
         }
 
         specificationItems.add(specBuilder.build());

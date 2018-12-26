@@ -30,6 +30,8 @@ import static org.hamcrest.Matchers.notNullValue;
 public class SpecTreeProcessorTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecTreeProcessorTest.class);
+    private static final SpecificationItemId TEST_ID = SpecificationItemId.createId("tst", "test-spec-id", 1);
+
     private static Asciidoctor asciidoctor;
     private SpecTreeProcessor underTest;
 
@@ -49,7 +51,7 @@ public class SpecTreeProcessorTest {
     @DisplayName("is defined by using the .spec role")
     public void whenSpecRoleIsFoundOnSectionSpecItemIsCreated() {
         // Arrange
-        String input = "[.spec]\n" +
+        String input = "[.spec,specID=" + TEST_ID + "]\n" +
                 "== A specification section";
 
         // Act
@@ -68,8 +70,8 @@ public class SpecTreeProcessorTest {
         @DisplayName("that can be defined in OFT syntax via specID attribute")
         void specItemIdCanBeDefinedInOftSyntax() {
             // Arrange
-            String input = "[.spec,specID=feat~html-export~1]\n" +
-                    "== HTML Export";
+            String input = "[.spec,specID=" + TEST_ID + "]\n" +
+                    "== A specification section";
 
             // Act
             String output = asciidoctor.convert(input, options().toFile(false));
@@ -79,7 +81,7 @@ public class SpecTreeProcessorTest {
             assertThat(specObjects.stream()
                             .map(SpecificationItem::getId)
                             .collect(toList()),
-                    hasItem(SpecificationItemId.parseId("feat~html-export~1")));
+                    hasItem(TEST_ID));
         }
     }
 }

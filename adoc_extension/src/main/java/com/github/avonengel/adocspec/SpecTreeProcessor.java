@@ -37,7 +37,6 @@ public class SpecTreeProcessor extends Treeprocessor {
 
     private void processSpecNode(StructuralNode structuralNode) {
         SpecificationItem.Builder specBuilder = SpecificationItem.builder();
-        specBuilder.id("test", "test", 1);
         LOG.debug("node ID: {}", structuralNode.getId());
         LOG.debug("node attributes: {}", structuralNode.getAttributes());
         LOG.debug("node title: {}", structuralNode.getTitle());

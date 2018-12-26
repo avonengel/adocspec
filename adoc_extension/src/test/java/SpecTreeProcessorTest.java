@@ -1,13 +1,7 @@
 import com.github.avonengel.adocspec.SpecTreeProcessor;
 import org.asciidoctor.Asciidoctor;
-
-import static java.util.stream.Collectors.toList;
-import static org.asciidoctor.OptionsBuilder.options;
-
-import org.hamcrest.Matchers;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,9 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.asciidoctor.Asciidoctor.Factory.create;
+import static org.asciidoctor.OptionsBuilder.options;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
@@ -27,7 +22,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
 @DisplayName("A SpecObject")
-public class SpecTreeProcessorTest {
+class SpecTreeProcessorTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecTreeProcessorTest.class);
     private static final SpecificationItemId TEST_ID = SpecificationItemId.createId("tst", "test-spec-id", 1);
@@ -49,7 +44,7 @@ public class SpecTreeProcessorTest {
 
     @Test
     @DisplayName("is defined by using the .spec role")
-    public void whenSpecRoleIsFoundOnSectionSpecItemIsCreated() {
+    void whenSpecRoleIsFoundOnSectionSpecItemIsCreated() {
         // Arrange
         String input = "[.spec,specID=" + TEST_ID + "]\n" +
                 "== A specification section";

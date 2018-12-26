@@ -47,7 +47,18 @@ public class SpecTreeProcessor extends Treeprocessor {
             specBuilder.id(SpecificationItemId.parseId((String) specID));
         }
 
+        specBuilder.description(collectDescription(structuralNode));
         specificationItems.add(specBuilder.build());
+    }
+
+    private String collectDescription(StructuralNode structuralNode) {
+        StringBuilder builder = new StringBuilder();
+        for (StructuralNode block : structuralNode.getBlocks()) {
+            Object content = block.getContent();
+            builder.append(content.toString());
+        }
+
+        return builder.toString();
     }
 
     public List<SpecificationItem> getSpecObjects() {

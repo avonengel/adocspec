@@ -56,7 +56,7 @@ class SpecTreeProcessorTest {
 
     @DisplayName("has a SpecificationItemId")
     @Nested
-    class SpecificationItemIdTest {
+    class HasId {
         @Test
         @DisplayName("that can be defined in OFT syntax via specID attribute")
         void specItemIdCanBeDefinedInOftSyntax() {
@@ -72,6 +72,29 @@ class SpecTreeProcessorTest {
             assertThat(specObjects)
                     .extracting(SpecificationItem::getId)
                     .contains(TEST_ID);
+        }
+    }
+
+    @DisplayName("has a Description")
+    @Nested
+    class HasDescription {
+        @Test
+        @DisplayName("when section body exists")
+        void whenSectionBodyExists() {
+            // Arrange
+            String dummyDescription = "Specification description should go here. Describes what is required.";
+            String input = "[.spec,specID=" + TEST_ID + "]\n" +
+                    "== A specification section\n" +
+                    dummyDescription;
+
+            // Act
+            String output = asciidoctor.convert(input, options().toFile(false));
+
+            // Assert
+            List<SpecificationItem> specObjects = underTest.getSpecObjects();
+            assertThat(specObjects)
+                    .extracting(SpecificationItem::getDescription)
+                    .contains(dummyDescription);
         }
     }
 }

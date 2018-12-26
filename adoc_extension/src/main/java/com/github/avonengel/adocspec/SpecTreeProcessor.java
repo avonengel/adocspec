@@ -5,6 +5,7 @@ import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.Treeprocessor;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
+import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 public class SpecTreeProcessor extends Treeprocessor {
 
@@ -47,18 +49,32 @@ public class SpecTreeProcessor extends Treeprocessor {
             specBuilder.id(SpecificationItemId.parseId((String) specID));
         }
 
-        specBuilder.description(collectDescription(structuralNode));
+        parseContent(structuralNode, specBuilder);
         specificationItems.add(specBuilder.build());
     }
 
-    private String collectDescription(StructuralNode structuralNode) {
-        StringBuilder builder = new StringBuilder();
+    private void parseContent(StructuralNode structuralNode, SpecificationItem.Builder specBuilder) {
+        StringBuilder description = new StringBuilder();
+
         for (StructuralNode block : structuralNode.getBlocks()) {
             Object content = block.getContent();
-            builder.append(content.toString());
+            if (!(content instanceof String)) {
+                LOG.warn("Found non-string content ({}): {}", content.getClass(), content);
+                continue;
+            }
+            String stringContent = (String) content;
+            final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(stringContent);
+            if (needsMatcher.matches()) {
+                for (String needs : needsMatcher.group(1).split(",\\s*")) {
+                    specBuilder.addNeedsArtifactType(needs);
+                }
+
+            } else {
+                description.append(content.toString());
+            }
         }
 
-        return builder.toString();
+        specBuilder.description(description.toString());
     }
 
     public List<SpecificationItem> getSpecObjects() {

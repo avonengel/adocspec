@@ -79,7 +79,7 @@ class SpecTreeProcessorTest {
     @Nested
     class HasDescription {
         @Test
-        @DisplayName("when section body exists")
+        @DisplayName("when section body exists then it becomes the Description")
         void whenSectionBodyExists() {
             // Arrange
             String dummyDescription = "Specification description should go here. Describes what is required.";
@@ -95,6 +95,50 @@ class SpecTreeProcessorTest {
             assertThat(specObjects)
                     .extracting(SpecificationItem::getDescription)
                     .contains(dummyDescription);
+        }
+    }
+
+    @DisplayName("may have coverage Needs")
+    @Nested
+    class SpecifiesCoverage {
+        @Test
+        @DisplayName("specified like in OFT: 'Needs: dsn'")
+        void needsParagraphWithInlineList() {
+            // Arrange
+            final String dummyType = "dummy";
+            String input = "[.spec,specID=" + TEST_ID + "]\n" +
+                    "== A specification section\n" +
+                    "Needs: " + dummyType;
+
+            // Act
+            String output = asciidoctor.convert(input, options().toFile(false));
+
+            // Assert
+            List<SpecificationItem> specObjects = underTest.getSpecObjects();
+            assertThat(specObjects).hasSize(1);
+            SpecificationItem item = specObjects.get(0);
+            assertThat(item.getNeedsArtifactTypes()).containsOnly(dummyType);
+            assertThat(item.getDescription()).isNullOrEmpty();
+        }
+
+        @DisplayName("specified as a list")
+        void needsList() {
+            /*
+             TODO: later:
+             Needs:
+             * dummy1
+             * dummy2
+
+             or even:
+             .Needs
+             * dummy1
+             * dummy2
+
+             or:
+             [.needs]
+             * dummy1
+             * dummy2
+             */
         }
     }
 }

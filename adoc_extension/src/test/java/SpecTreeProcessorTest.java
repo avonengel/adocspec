@@ -12,14 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 import static org.asciidoctor.Asciidoctor.Factory.create;
 import static org.asciidoctor.OptionsBuilder.options;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("A SpecObject")
 class SpecTreeProcessorTest {
@@ -54,8 +49,9 @@ class SpecTreeProcessorTest {
 
         // Assert
         List<SpecificationItem> specObjects = underTest.getSpecObjects();
-        assertThat(specObjects, notNullValue());
-        assertThat(specObjects, not(empty()));
+
+        assertThat(specObjects).isNotNull()
+                .isNotEmpty();
     }
 
     @DisplayName("has a SpecificationItemId")
@@ -73,10 +69,9 @@ class SpecTreeProcessorTest {
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
-            assertThat(specObjects.stream()
-                            .map(SpecificationItem::getId)
-                            .collect(toList()),
-                    hasItem(TEST_ID));
+            assertThat(specObjects)
+                    .extracting(SpecificationItem::getId)
+                    .contains(TEST_ID);
         }
     }
 }

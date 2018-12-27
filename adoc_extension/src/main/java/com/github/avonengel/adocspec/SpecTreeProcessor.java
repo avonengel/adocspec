@@ -69,6 +69,8 @@ public class SpecTreeProcessor extends Treeprocessor {
                             throw new IllegalFormatException("Encountered non-ListItem in covers List");
                         }
                     });
+                } else {
+                    throw new IllegalFormatException("Encountered non-List block with role .covers");
                 }
             } else {
                 Object content = block.getContent();

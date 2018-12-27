@@ -6,8 +6,8 @@ import org.asciidoctor.extension.spi.ExtensionRegistry;
 
 public class SpecExtension implements ExtensionRegistry {
 
-  @Override
-  public void register(Asciidoctor asciidoctor) {
+    @Override
+    public void register(Asciidoctor asciidoctor) {
 
     JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
     javaExtensionRegistry.treeprocessor(SpecTreeProcessor.class);

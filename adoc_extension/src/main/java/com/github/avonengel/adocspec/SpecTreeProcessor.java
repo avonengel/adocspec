@@ -1,6 +1,7 @@
 package com.github.avonengel.adocspec;
 
 import org.asciidoctor.ast.Document;
+import org.asciidoctor.ast.ListItem;
 import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.Treeprocessor;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
@@ -57,20 +58,33 @@ public class SpecTreeProcessor extends Treeprocessor {
         StringBuilder description = new StringBuilder();
 
         for (StructuralNode block : structuralNode.getBlocks()) {
-            Object content = block.getContent();
-            if (!(content instanceof String)) {
-                LOG.warn("Found non-string content ({}): {}", content.getClass(), content);
-                continue;
-            }
-            String stringContent = (String) content;
-            final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(stringContent);
-            if (needsMatcher.matches()) {
-                for (String needs : needsMatcher.group(1).split(",\\s*")) {
-                    specBuilder.addNeedsArtifactType(needs);
+            if (block.getRoles().contains("covers")) {
+                if (block instanceof org.asciidoctor.ast.List) {
+                    org.asciidoctor.ast.List list = (org.asciidoctor.ast.List) block;
+                    list.getItems().forEach((StructuralNode item) -> {
+                        if (item instanceof ListItem) {
+                            final ListItem listItem = (ListItem) item;
+                            specBuilder.addCoveredId(SpecificationItemId.parseId(listItem.getText()));
+                        } else {
+                            throw new IllegalFormatException("Encountered non-ListItem in covers List");
+                        }
+                    });
                 }
-
             } else {
-                description.append(content.toString());
+                Object content = block.getContent();
+                if (!(content instanceof String)) {
+                    LOG.warn("Found non-string content ({}): {}", content.getClass(), content);
+                    continue;
+                }
+                String stringContent = (String) content;
+                final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(stringContent);
+                if (needsMatcher.matches()) {
+                    for (String needs : needsMatcher.group(1).split(",\\s*")) {
+                        specBuilder.addNeedsArtifactType(needs);
+                    }
+                } else {
+                    description.append(content.toString());
+                }
             }
         }
 

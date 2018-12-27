@@ -141,4 +141,92 @@ class SpecTreeProcessorTest {
              */
         }
     }
+
+    @DisplayName("may cover requirements")
+    @Nested
+    class HasCoversList {
+        @DisplayName("defined using role .covers with $$")
+        @Test
+        void coversListWithRoleWithDoubleDollarPassStyle() {
+            // Arrange
+            final String dummyCovers = "dummy~some-dummy-id~1";
+            String input = "[.spec,specID=" + TEST_ID + "]\n" +
+                    "== A specification section\n" +
+                    "[.covers]\n" +
+                    "* $$" + dummyCovers + "$$";
+
+            // Act
+            String output = asciidoctor.convert(input, options().toFile(false));
+
+            // Assert
+            List<SpecificationItem> specObjects = underTest.getSpecObjects();
+            assertThat(specObjects).hasSize(1);
+            SpecificationItem item = specObjects.get(0);
+            assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            assertThat(item.getDescription()).isNullOrEmpty();
+        }
+
+        @DisplayName("defined using role .covers with +++")
+        @Test
+        void coversListWithRoleWithTriplePlusPassStyle() {
+            // Arrange
+            final String dummyCovers = "dummy~some-dummy-id~1";
+            String input = "[.spec,specID=" + TEST_ID + "]\n" +
+                    "== A specification section\n" +
+                    "[.covers]\n" +
+                    "* +++" + dummyCovers + "+++";
+
+            // Act
+            String output = asciidoctor.convert(input, options().toFile(false));
+
+            // Assert
+            List<SpecificationItem> specObjects = underTest.getSpecObjects();
+            assertThat(specObjects).hasSize(1);
+            SpecificationItem item = specObjects.get(0);
+            assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            assertThat(item.getDescription()).isNullOrEmpty();
+        }
+
+        @DisplayName("defined using role .covers with pass:[]")
+        @Test
+        void coversListWithRoleWithPassInlineMacro() {
+            // Arrange
+            final String dummyCovers = "dummy~some-dummy-id~1";
+            String input = "[.spec,specID=" + TEST_ID + "]\n" +
+                    "== A specification section\n" +
+                    "[.covers]\n" +
+                    "* pass:[" + dummyCovers + "]";
+
+            // Act
+            String output = asciidoctor.convert(input, options().toFile(false));
+
+            // Assert
+            List<SpecificationItem> specObjects = underTest.getSpecObjects();
+            assertThat(specObjects).hasSize(1);
+            SpecificationItem item = specObjects.get(0);
+            assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            assertThat(item.getDescription()).isNullOrEmpty();
+        }
+
+        @DisplayName("defined using role .covers with ++")
+        @Test
+        void coversListWithRoleWithDoublePlusPass() {
+            // Arrange
+            final String dummyCovers = "dummy~some-dummy-id~1";
+            String input = "[.spec,specID=" + TEST_ID + "]\n" +
+                    "== A specification section\n" +
+                    "[.covers]\n" +
+                    "* ++" + dummyCovers + "++";
+
+            // Act
+            String output = asciidoctor.convert(input, options().toFile(false));
+
+            // Assert
+            List<SpecificationItem> specObjects = underTest.getSpecObjects();
+            assertThat(specObjects).hasSize(1);
+            SpecificationItem item = specObjects.get(0);
+            assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            assertThat(item.getDescription()).isNullOrEmpty();
+        }
+    }
 }

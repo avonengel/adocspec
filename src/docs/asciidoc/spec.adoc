@@ -1,0 +1,17 @@
+= AdocSpec Specification
+Axel von Engel <a.vonengel@gmail.com>
+2018-12-27
+:revnumber: {project-version}
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+This is the specification for the adocspec project.
+
+[.spec,specID=goal~adocspec-goal~1]
+== Introduction
+
+The adocspec project aims at making writing requirements in AsciiDoc format
+possible by using the openfasttrace tracing toolchain.
+
+Needs: feat
+

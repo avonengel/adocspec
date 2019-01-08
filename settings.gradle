@@ -8,6 +8,3 @@
  */
 
 rootProject.name = 'adocspec'
-
-include('adoc_extension')
-include('document')

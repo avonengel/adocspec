@@ -4,12 +4,17 @@ import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.ListItem;
 import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.Treeprocessor;
+import org.itsallcode.openfasttrace.ExportSettings;
+import org.itsallcode.openfasttrace.Oft;
+import org.itsallcode.openfasttrace.core.Newline;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,7 +31,31 @@ public class SpecTreeProcessor extends Treeprocessor {
     public Document process(Document document) {
         LOG.debug("Examining document: {}", document.getDoctitle());
         searchDocumentForSpecSections(document);
+        export(document);
         return document;
+    }
+
+    private void export(Document document) {
+        Path exportPath = getExportPath(document);
+        if (exportPath != null) {
+            LOG.info("Exporting to {}", exportPath);
+            Oft.create().exportToPath(specificationItems, exportPath);
+        } else {
+            LOG.info("Not exporting specification items, as no export path is set.");
+        }
+    }
+
+    private Path getExportPath(Document document) {
+        final Object specfile = document.getAttribute("specfile");
+        final Object docdir = document.getAttribute("docdir");
+        LOG.debug("specfile: {}", specfile);
+        if (specfile != null && !specfile.toString().isEmpty()) {
+            return Paths.get(specfile.toString());
+        } else if (docdir instanceof String && !((String) docdir).isEmpty()) {
+            Object docname = document.getAttribute("docname");
+            return Paths.get(docdir.toString()).resolve(docname.toString() + ".reqm");
+        }
+        return null;
     }
 
     private void searchDocumentForSpecSections(Document document) {

@@ -47,13 +47,13 @@ public class SpecTreeProcessor extends Treeprocessor {
 
     private Path getExportPath(Document document) {
         final Object specfile = document.getAttribute("specfile");
-        final Object docdir = document.getAttribute("docdir");
+        final Object outdir = document.getAttribute("outdir");
         LOG.debug("specfile: {}", specfile);
         if (specfile != null && !specfile.toString().isEmpty()) {
             return Paths.get(specfile.toString());
-        } else if (docdir instanceof String && !((String) docdir).isEmpty()) {
+        } else if (outdir instanceof String && !((String) outdir).isEmpty()) {
             Object docname = document.getAttribute("docname");
-            return Paths.get(docdir.toString()).resolve(docname.toString() + ".reqm");
+            return Paths.get(outdir.toString()).resolve(docname.toString() + ".reqm");
         }
         return null;
     }

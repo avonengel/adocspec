@@ -73,12 +73,12 @@ public class SpecTreeProcessor extends Treeprocessor {
 
     private void processSpecNode(StructuralNode structuralNode) {
         SpecificationItem.Builder specBuilder = SpecificationItem.builder();
-        LOG.debug("node ID: {}", structuralNode.getId());
-        LOG.debug("node attributes: {}", structuralNode.getAttributes());
-        LOG.debug("node title: {}", structuralNode.getTitle());
-        LOG.debug("node context: {}", structuralNode.getContext());
+        LOG.debug(structuralNode.getSourceLocation() + ": node ID = {}", structuralNode.getId());
+        LOG.debug(structuralNode.getSourceLocation() + ": node attributes = {}", structuralNode.getAttributes());
+        LOG.debug(structuralNode.getSourceLocation() + ": node title = {}", structuralNode.getTitle());
+        LOG.debug(structuralNode.getSourceLocation() + ": node context = {}", structuralNode.getContext());
         Object specID = structuralNode.getAttribute("specID");
-        LOG.debug("specID attribute: {}", specID);
+        LOG.debug(structuralNode.getSourceLocation() + ": specID attribute = {}", specID);
         if (specID instanceof String) {
             specBuilder.id(SpecificationItemId.parseId((String) specID));
         }
@@ -101,19 +101,19 @@ public class SpecTreeProcessor extends Treeprocessor {
                             if (specId != null) {
                                 specBuilder.addCoveredId(specId);
                             } else {
-                                throw new IllegalFormatException("Encountered ListItem that is not a SpecificationItemId: " + listItem.getSource());
+                                throw new IllegalFormatException(item.getSourceLocation() + ": Encountered ListItem that is not a SpecificationItemId: " + listItem.getSource());
                             }
                         } else {
-                            throw new IllegalFormatException("Encountered non-ListItem in covers List: " + item.getContent());
+                            throw new IllegalFormatException(item.getSourceLocation() + ": Encountered non-ListItem in covers List: " + item.getContent());
                         }
                     });
                 } else {
-                    throw new IllegalFormatException("Encountered non-List block with role .covers");
+                    throw new IllegalFormatException(block.getSourceLocation() + ": Encountered non-List block with role .covers");
                 }
             } else {
                 Object content = block.getContent();
                 if (!(content instanceof String)) {
-                    LOG.warn("Found non-string content ({}): {}", content.getClass(), content);
+                    LOG.warn(block.getSourceLocation() + ": Found non-string content ({}): {}", content.getClass(), content);
                     continue;
                 }
                 String stringContent = (String) content;

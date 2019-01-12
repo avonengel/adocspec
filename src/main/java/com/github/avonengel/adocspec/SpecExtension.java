@@ -9,8 +9,8 @@ public class SpecExtension implements ExtensionRegistry {
     @Override
     public void register(Asciidoctor asciidoctor) {
 
-    JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
-    javaExtensionRegistry.treeprocessor(SpecTreeProcessor.class);
-  }
+        JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
+        javaExtensionRegistry.treeprocessor(SpecTreeProcessor.class);
+    }
 
 }

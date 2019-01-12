@@ -1,12 +1,10 @@
-import com.github.avonengel.adocspec.SpecTreeProcessor;
+package com.github.avonengel.adocspec;
+
 import org.asciidoctor.Asciidoctor;
+import org.assertj.core.api.Assertions;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +12,6 @@ import java.util.List;
 
 import static org.asciidoctor.Asciidoctor.Factory.create;
 import static org.asciidoctor.OptionsBuilder.options;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("A SpecObject")
 class SpecTreeProcessorTest {
@@ -50,7 +47,7 @@ class SpecTreeProcessorTest {
         // Assert
         List<SpecificationItem> specObjects = underTest.getSpecObjects();
 
-        assertThat(specObjects).isNotNull()
+        Assertions.assertThat(specObjects).isNotNull()
                 .isNotEmpty();
     }
 
@@ -69,7 +66,7 @@ class SpecTreeProcessorTest {
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
-            assertThat(specObjects)
+            Assertions.assertThat(specObjects)
                     .extracting(SpecificationItem::getId)
                     .contains(TEST_ID);
         }
@@ -92,7 +89,7 @@ class SpecTreeProcessorTest {
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
-            assertThat(specObjects)
+            Assertions.assertThat(specObjects)
                     .extracting(SpecificationItem::getDescription)
                     .contains(dummyDescription);
         }
@@ -115,10 +112,10 @@ class SpecTreeProcessorTest {
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
-            assertThat(specObjects).hasSize(1);
+            Assertions.assertThat(specObjects).hasSize(1);
             SpecificationItem item = specObjects.get(0);
-            assertThat(item.getNeedsArtifactTypes()).containsOnly(dummyType);
-            assertThat(item.getDescription()).isNullOrEmpty();
+            Assertions.assertThat(item.getNeedsArtifactTypes()).containsOnly(dummyType);
+            Assertions.assertThat(item.getDescription()).isNullOrEmpty();
         }
 
         @DisplayName("specified as a list")
@@ -160,10 +157,10 @@ class SpecTreeProcessorTest {
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
-            assertThat(specObjects).hasSize(1);
+            Assertions.assertThat(specObjects).hasSize(1);
             SpecificationItem item = specObjects.get(0);
-            assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
-            assertThat(item.getDescription()).isNullOrEmpty();
+            Assertions.assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            Assertions.assertThat(item.getDescription()).isNullOrEmpty();
         }
 
         @DisplayName("defined using role .covers with +++")
@@ -181,10 +178,10 @@ class SpecTreeProcessorTest {
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
-            assertThat(specObjects).hasSize(1);
+            Assertions.assertThat(specObjects).hasSize(1);
             SpecificationItem item = specObjects.get(0);
-            assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
-            assertThat(item.getDescription()).isNullOrEmpty();
+            Assertions.assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            Assertions.assertThat(item.getDescription()).isNullOrEmpty();
         }
 
         @DisplayName("defined using role .covers with pass:[]")
@@ -202,10 +199,10 @@ class SpecTreeProcessorTest {
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
-            assertThat(specObjects).hasSize(1);
+            Assertions.assertThat(specObjects).hasSize(1);
             SpecificationItem item = specObjects.get(0);
-            assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
-            assertThat(item.getDescription()).isNullOrEmpty();
+            Assertions.assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            Assertions.assertThat(item.getDescription()).isNullOrEmpty();
         }
 
         @DisplayName("defined using role .covers with ++")
@@ -223,10 +220,10 @@ class SpecTreeProcessorTest {
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
-            assertThat(specObjects).hasSize(1);
+            Assertions.assertThat(specObjects).hasSize(1);
             SpecificationItem item = specObjects.get(0);
-            assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
-            assertThat(item.getDescription()).isNullOrEmpty();
+            Assertions.assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            Assertions.assertThat(item.getDescription()).isNullOrEmpty();
         }
     }
 }

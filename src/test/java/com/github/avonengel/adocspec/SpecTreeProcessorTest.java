@@ -225,5 +225,26 @@ class SpecTreeProcessorTest {
             Assertions.assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
             Assertions.assertThat(item.getDescription()).isNullOrEmpty();
         }
+
+        @DisplayName("defined using role .covers with `+")
+        @Test
+        void coversListWithRoleWithBacktickPlusPass() {
+            // Arrange
+            final String dummyCovers = "dummy~some-dummy-id~1";
+            String input = "[.spec,specID=" + TEST_ID + "]\n" +
+                    "== A specification section\n" +
+                    "[.covers]\n" +
+                    "* `+" + dummyCovers + "+`";
+
+            // Act
+            String output = asciidoctor.convert(input, options().toFile(false));
+
+            // Assert
+            List<SpecificationItem> specObjects = underTest.getSpecObjects();
+            Assertions.assertThat(specObjects).hasSize(1);
+            SpecificationItem item = specObjects.get(0);
+            Assertions.assertThat(item.getCoveredIds()).containsOnly(SpecificationItemId.parseId(dummyCovers));
+            Assertions.assertThat(item.getDescription()).isNullOrEmpty();
+        }
     }
 }

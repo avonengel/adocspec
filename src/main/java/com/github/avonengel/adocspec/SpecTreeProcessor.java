@@ -21,10 +21,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SpecTreeProcessor extends Treeprocessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecTreeProcessor.class);
+    private static final Pattern ID_PATTERN = Pattern.compile("`?(?:\\$\\$|\\+{1,3}|pass:[cqarmp,]*\\[)(?<specId>"
+            + SpecificationItemId.ID_PATTERN
+            + ")(?:\\$\\$|\\+{1,3}|])`?");
     private List<SpecificationItem> specificationItems = new LinkedList<>();
 
     @Override
@@ -93,9 +97,14 @@ public class SpecTreeProcessor extends Treeprocessor {
                     list.getItems().forEach((StructuralNode item) -> {
                         if (item instanceof ListItem) {
                             final ListItem listItem = (ListItem) item;
-                            specBuilder.addCoveredId(SpecificationItemId.parseId(listItem.getText()));
+                            SpecificationItemId specId = extractSpecIdFromListItem(listItem);
+                            if (specId != null) {
+                                specBuilder.addCoveredId(specId);
+                            } else {
+                                throw new IllegalFormatException("Encountered ListItem that is not a SpecificationItemId: " + listItem.getSource());
+                            }
                         } else {
-                            throw new IllegalFormatException("Encountered non-ListItem in covers List");
+                            throw new IllegalFormatException("Encountered non-ListItem in covers List: " + item.getContent());
                         }
                     });
                 } else {
@@ -122,7 +131,15 @@ public class SpecTreeProcessor extends Treeprocessor {
         specBuilder.description(description.toString());
     }
 
-    public List<SpecificationItem> getSpecObjects() {
+    private SpecificationItemId extractSpecIdFromListItem(ListItem listItem) {
+        Matcher sourceMatcher = ID_PATTERN.matcher(listItem.getSource());
+        if (sourceMatcher.matches()) {
+            return SpecificationItemId.parseId(sourceMatcher.group("specId"));
+        }
+        return null;
+    }
+
+    List<SpecificationItem> getSpecObjects() {
         return Collections.unmodifiableList(specificationItems);
     }
 }

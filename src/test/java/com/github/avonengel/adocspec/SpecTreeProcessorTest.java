@@ -1,4 +1,5 @@
-import com.github.avonengel.adocspec.SpecTreeProcessor;
+package com.github.avonengel.adocspec;
+
 import org.asciidoctor.Asciidoctor;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;

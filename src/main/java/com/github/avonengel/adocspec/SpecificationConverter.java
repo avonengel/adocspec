@@ -31,6 +31,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
         super(backend, opts);
+        setOutfileSuffix(".xml");
     }
 
     @Override

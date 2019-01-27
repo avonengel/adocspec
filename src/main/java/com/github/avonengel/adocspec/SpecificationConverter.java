@@ -68,10 +68,18 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         } else if (node instanceof Block) {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
-            final Matcher matcher = MdPattern.ID.getPattern().matcher(convertedBlock);
-            if(matcher.matches()) {
+            if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
+            } else {
+                final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
+                if (needsMatcher.matches()) {
+                    for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
+                        specListBuilder.addNeededArtifactType(artifactType);
+                    }
+                } else {
+                    specListBuilder.appendDescription(convertedBlock);
+                }
             }
         }
 

@@ -2,6 +2,7 @@ package com.github.avonengel.adocspec;
 
 import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.ContentNode;
+import org.asciidoctor.ast.Cursor;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.PhraseNode;
 import org.asciidoctor.ast.Section;
@@ -37,7 +38,12 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     @Override
     public Object convert(ContentNode node, String transform, Map<Object, Object> opts) {
-        LOG.info("Asciidoctor converter: convert {} ({}), {}, {}", node, node.getNodeName(), transform, opts);
+        if (node instanceof StructuralNode) {
+            final Cursor sourceLocation = ((StructuralNode) node).getSourceLocation();
+            LOG.info("{} convert {} ({}), {}, {}", sourceLocation, node, node.getNodeName(), transform, opts);
+        } else {
+            LOG.info("convert {} ({}), {}, {}", node, node.getNodeName(), transform, opts);
+        }
         if (node instanceof Document) {
             final Document document = (Document) node;
             document.getBlocks().forEach(StructuralNode::convert);

@@ -30,6 +30,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
+    private String state = "start";
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
         super(backend, opts);
@@ -54,6 +55,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             LOG.info("Processing section {}", section.getTitle());
             section.getBlocks().forEach(StructuralNode::convert);
             specListBuilder.endSpecificationItem();
+            state = "start";
         } else if (node instanceof PhraseNode) {
             final PhraseNode phrase = (PhraseNode) node;
             LOG.info("phrase target {}", phrase.getTarget());
@@ -80,6 +82,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
+                state = "spec";
             } else {
                 final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
                 if (needsMatcher.matches()) {
@@ -87,7 +90,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                         specListBuilder.addNeededArtifactType(artifactType);
                     }
                 } else {
-                    specListBuilder.appendDescription(convertedBlock);
+                    if (state.equals("spec")) {
+                        specListBuilder.appendDescription(convertedBlock);
+                    }
                 }
             }
         }

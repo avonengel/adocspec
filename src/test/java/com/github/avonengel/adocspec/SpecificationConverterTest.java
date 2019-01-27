@@ -86,6 +86,21 @@ class SpecificationConverterTest {
                 .doesNotContain(A_PARAGRAPH);
     }
 
+    @Test
+    void onlyParagraphsAfterSectionIdAreUsed() {
+        // Arrange
+        String input = A_PARAGRAPH + "\n\n" +
+                "`+" + A_SPEC_ID + "+`";
+
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).isNotEmpty();
+        assertThat(output).extracting(SpecificationItem::getDescription).first().asString()
+                .isEmpty();
+    }
+
     @SuppressWarnings("unchecked")
     private List<SpecificationItem> convertToSpecList(String input) {
         return asciidoctor.convert(input, OptionsBuilder.options().backend("spec"), List.class);

@@ -19,9 +19,12 @@ class SpecificationConverterTest {
     private static final String A_TYPE = "dummy";
     private static final String AN_OTHER_TYPE = "othertype";
     private static final String A_SPEC_NAME = "a-spec";
+    private static final String AN_OTHER_SPEC_NAME = "an-other-spec";
     private static final int A_SPEC_VERSION = 3;
     private static final SpecificationItemId A_SPEC_ID = SpecificationItemId.createId(A_TYPE, A_SPEC_NAME, A_SPEC_VERSION);
+    private static final SpecificationItemId AN_OTHER_SPEC_ID = SpecificationItemId.createId(AN_OTHER_TYPE, AN_OTHER_SPEC_NAME, A_SPEC_VERSION);
     private static final String A_DESCRIPTION = "some text content, to be used as description";
+    private static final String A_PARAGRAPH = "some text content, not to be used by spec";
     private static Asciidoctor asciidoctor;
 
     @BeforeAll
@@ -63,6 +66,24 @@ class SpecificationConverterTest {
         // Assert
         assertThat(output).isNotEmpty();
         assertThat(output).extracting(SpecificationItem::getId).containsOnly(A_SPEC_ID);
+    }
+
+    @Test
+    @DisplayName("When a new section begins, then the spec item is terminated")
+    void whenSectionBeginsSpecIsTerminated() {
+        // Arrange
+        String input = "== A Section Title\n" +
+                "`+" + A_SPEC_ID + "+`\n\n" +
+                "== Another Section Title\n" +
+                A_PARAGRAPH;
+
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).isNotEmpty();
+        assertThat(output).extracting(SpecificationItem::getDescription).first().asString()
+                .doesNotContain(A_PARAGRAPH);
     }
 
     @SuppressWarnings("unchecked")

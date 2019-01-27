@@ -45,7 +45,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             return specListBuilder.build();
         } else if (node instanceof Section) {
             final Section section = (Section) node;
+            LOG.info("Processing section {}", section.getTitle());
             section.getBlocks().forEach(StructuralNode::convert);
+            specListBuilder.endSpecificationItem();
         } else if (node instanceof PhraseNode) {
             final PhraseNode phrase = (PhraseNode) node;
             LOG.info("phrase target {}", phrase.getTarget());

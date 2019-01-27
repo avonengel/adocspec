@@ -1,17 +1,17 @@
 package com.github.avonengel.adocspec;
 
 import org.asciidoctor.Asciidoctor;
-import org.asciidoctor.AttributesBuilder;
 import org.asciidoctor.OptionsBuilder;
+import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.asciidoctor.Asciidoctor.Factory.create;
-import static org.asciidoctor.AttributesBuilder.attributes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpecificationConverterTest {
@@ -40,10 +40,10 @@ class SpecificationConverterTest {
         String input = "`+" + A_SPEC_ID + "+`";
 
         // Act
-        final String output = asciidoctor.convert(input, OptionsBuilder.options().backend("spec"));
+        final List<SpecificationItem> output = asciidoctor.convert(input, OptionsBuilder.options().backend("spec"), List.class);
 
         // Assert
-        assertThat(output).isNotBlank();
-        Assertions.fail(output);
+        assertThat(output).isNotEmpty();
+        assertThat(output).extracting(SpecificationItem::getId).containsOnly(A_SPEC_ID);
     }
 }

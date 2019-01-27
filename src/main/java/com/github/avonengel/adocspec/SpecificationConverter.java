@@ -5,7 +5,7 @@ import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.PhraseNode;
 import org.asciidoctor.ast.StructuralNode;
-import org.asciidoctor.converter.StringConverter;
+import org.asciidoctor.converter.AbstractConverter;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.exporter.specobject.SpecobjectWriterExporterFactory;
@@ -14,14 +14,17 @@ import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.util.List;
+import java.io.Writer;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 // TODO try if it's possible to build a converter with Object as return type, and return Spec list on Document, otherwise String?
-public class SpecificationConverter extends StringConverter {
+public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
@@ -31,13 +34,13 @@ public class SpecificationConverter extends StringConverter {
     }
 
     @Override
-    public String convert(ContentNode node, String transform, Map<Object, Object> opts) {
+    public Object convert(ContentNode node, String transform, Map<Object, Object> opts) {
         LOG.info("Asciidoctor converter: convert {} ({}), {}, {}", node, node.getNodeName(), transform, opts);
         if (node instanceof Document) {
             final Document document = (Document) node;
             document.getBlocks().forEach(StructuralNode::convert);
 
-            return convertToSpecFormat();
+            return specListBuilder.build();
 //        } else if (node instanceof StructuralNode) {
 //            final StructuralNode structuralNode = (StructuralNode) node;
 //            structuralNode.getBlocks().forEach(this::convertBlock);
@@ -80,5 +83,14 @@ public class SpecificationConverter extends StringConverter {
         final StringWriter stringWriter = new StringWriter();
         exporterFactory.createExporter(stringWriter, specStream).runExport();
         return stringWriter.toString();
+    }
+
+    @Override
+    public void write(Object output, OutputStream out) throws IOException {
+        final Stream<SpecificationItem> specStream = specListBuilder.build().stream();
+        final SpecobjectWriterExporterFactory exporterFactory = new SpecobjectWriterExporterFactory();
+        try (Writer w = new OutputStreamWriter(out)) {
+            exporterFactory.createExporter(w, specStream).runExport();
+        }
     }
 }

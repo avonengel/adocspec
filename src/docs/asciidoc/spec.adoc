@@ -7,8 +7,9 @@ ifndef::sourcedir[:sourcedir: ../java]
 
 This is the specification for the adocspec project.
 
-[.spec,specID=goal~adocspec-goal~1]
 == Introduction
+
+`+goal~adocspec-goal~1+`
 
 The adocspec project aims at making writing requirements in AsciiDoc format
 possible by using the openfasttrace tracing toolchain.

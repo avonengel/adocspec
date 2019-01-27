@@ -19,11 +19,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
-// TODO try if it's possible to build a converter with Object as return type, and return Spec list on Document, otherwise String?
 public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
@@ -89,7 +89,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     public void write(Object output, OutputStream out) throws IOException {
         final Stream<SpecificationItem> specStream = specListBuilder.build().stream();
         final SpecobjectWriterExporterFactory exporterFactory = new SpecobjectWriterExporterFactory();
-        try (Writer w = new OutputStreamWriter(out)) {
+        try (Writer w = new OutputStreamWriter(out, Charset.forName("UTF-8"))) {
             exporterFactory.createExporter(w, specStream).runExport();
         }
     }

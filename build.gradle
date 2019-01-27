@@ -34,6 +34,7 @@ test {
 }
 
 asciidoctor {
+    backends = ['html5', 'spec']
     attributes << [
             'build-gradle'      : file('build.gradle'),
             'sourcedir'         : project.sourceSets.main.java.srcDirs[0],

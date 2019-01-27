@@ -4,6 +4,7 @@ import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.PhraseNode;
+import org.asciidoctor.ast.Section;
 import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.converter.AbstractConverter;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
@@ -42,9 +43,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             document.getBlocks().forEach(StructuralNode::convert);
 
             return specListBuilder.build();
-//        } else if (node instanceof StructuralNode) {
-//            final StructuralNode structuralNode = (StructuralNode) node;
-//            structuralNode.getBlocks().forEach(this::convertBlock);
+        } else if (node instanceof Section) {
+            final Section section = (Section) node;
+            section.getBlocks().forEach(StructuralNode::convert);
         } else if (node instanceof PhraseNode) {
             final PhraseNode phrase = (PhraseNode) node;
             LOG.info("phrase target {}", phrase.getTarget());

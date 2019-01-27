@@ -50,6 +50,21 @@ class SpecificationConverterTest {
         assertThat(output).extracting(SpecificationItem::getId).containsOnly(A_SPEC_ID);
     }
 
+    @Test
+    @DisplayName("When a Spec ID is found inside a section, then a Spec item is created")
+    void whenIdIsFoundInSectionSpecIsCreated() {
+        // Arrange
+        String input = "== A Section Title\n" +
+                "`+" + A_SPEC_ID + "+`";
+
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).isNotEmpty();
+        assertThat(output).extracting(SpecificationItem::getId).containsOnly(A_SPEC_ID);
+    }
+
     @SuppressWarnings("unchecked")
     private List<SpecificationItem> convertToSpecList(String input) {
         return asciidoctor.convert(input, OptionsBuilder.options().backend("spec"), List.class);

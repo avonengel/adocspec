@@ -26,3 +26,12 @@ jobs:
       - run: ./gradlew --no-daemon asciidoctor
       - store_artifacts:
           path: build/asciidoc
+
+workflows:
+  version: 2
+  build-convert:
+    jobs:
+      - build
+      - convert:
+          requires:
+            - build

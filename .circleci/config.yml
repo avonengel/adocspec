@@ -10,7 +10,7 @@ jobs:
           keys:
             - gradle-home-v1-{{ checksum "build.gradle" }}
             - gradle-home-v1
-      - run: ./gradlew build
+      - run: ./gradlew --no-daemon build
       - save_cache:
           key: gradle-home-v1-{{ checksum "build.gradle" }}
           paths:

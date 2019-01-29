@@ -17,5 +17,12 @@ jobs:
             - ~/.gradle
       - store_test_results:
           path: build/test-results
+
+  convert:
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - run: ./gradlew --no-daemon asciidoctor
       - store_artifacts:
           path: build/asciidoc

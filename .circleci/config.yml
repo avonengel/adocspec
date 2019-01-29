@@ -6,6 +6,14 @@ jobs:
       - image: circleci/openjdk:8-jdk-stretch
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - gradle-home-v1-{{ checksum "build.gradle" }}
+            - gradle-home-v1
       - run: ./gradlew build
+      - save_cache:
+          key: gradle-home-v1-{{ checksum "build.gradle" }}
+          paths:
+            - ~/.gradle
       - store_test_results:
           path: build/test-results

@@ -45,12 +45,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     @Override
     public Object convert(ContentNode node, String transform, Map<Object, Object> opts) {
-        if (node instanceof StructuralNode) {
-            final Cursor sourceLocation = ((StructuralNode) node).getSourceLocation();
-            LOG.info("{} convert {} ({}), {}, {}", sourceLocation, node, node.getNodeName(), transform, opts);
-        } else {
-            LOG.info("convert {} ({}), {}, {}", node, node.getNodeName(), transform, opts);
-        }
+        logConvertCall(node, transform, opts);
         if (node instanceof Document) {
             final Document document = (Document) node;
             document.getBlocks().forEach(StructuralNode::convert);
@@ -106,12 +101,13 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";
     }
 
-    private String convertToSpecFormat() {
-        final Stream<SpecificationItem> specStream = specListBuilder.build().stream();
-        final SpecobjectWriterExporterFactory exporterFactory = new SpecobjectWriterExporterFactory();
-        final StringWriter stringWriter = new StringWriter();
-        exporterFactory.createExporter(stringWriter, specStream).runExport();
-        return stringWriter.toString();
+    private void logConvertCall(ContentNode node, String transform, Map<Object, Object> opts) {
+        if (node instanceof StructuralNode) {
+            final Cursor sourceLocation = ((StructuralNode) node).getSourceLocation();
+            LOG.info("{} convert {} ({}), {}, {}", sourceLocation, node, node.getNodeName(), transform, opts);
+        } else {
+            LOG.info("convert {} ({}), {}, {}", node, node.getNodeName(), transform, opts);
+        }
     }
 
     @Override

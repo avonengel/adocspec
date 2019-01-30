@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.asciidoctor.convert' version '1.5.9.2'
+    id "org.itsallcode.openfasttrace" version "0.6.0"
 }
 
 repositories {
@@ -44,4 +45,9 @@ asciidoctor {
             'project-version'   : version,
             'specfile'          : new File(buildDir, "spec.reqm.xml"),
     ]
+}
+
+requirementTracing {
+    inputDirectories = files(asciidoctor.outputDir)
+    reportFormat = 'html'
 }

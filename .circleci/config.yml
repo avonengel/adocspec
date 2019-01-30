@@ -20,3 +20,5 @@ jobs:
             - ~/.gradle
       - store_artifacts:
           path: build/asciidoc
+      - store_artifacts:
+          path: build/reports/tracing.html

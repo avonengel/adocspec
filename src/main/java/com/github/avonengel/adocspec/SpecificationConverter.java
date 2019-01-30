@@ -96,12 +96,25 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
                         specListBuilder.addNeededArtifactType(artifactType);
                     }
-                } else {
-                    final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
-                    if (rationaleMatcher.matches()) {
-                        specListBuilder.appendRationale(rationaleMatcher.group(1));
-                    } else if (state == State.SPEC) {
-                        specListBuilder.appendDescription(convertedBlock);
+                } else if (rationaleMatcher.matches()) {
+                    specListBuilder.appendRationale(rationaleMatcher.group(1));
+                } else if (coversMatcher.matches()) {
+                    state = State.COVERS;
+                } else if (state == State.SPEC) {
+                    specListBuilder.appendDescription(convertedBlock);
+                }
+            }
+        } else if (node instanceof List) {
+            List list = (List) node;
+            if (state == State.COVERS) {
+                for (StructuralNode item : list.getItems()) {
+                    if (item instanceof ListItem) {
+                        ListItem listItem = (ListItem) item;
+                        String itemContent = listItem.getText();
+                        final Matcher idMatcher = SpecificationItemId.ID_PATTERN.matcher(itemContent);
+                        if (idMatcher.matches()) {
+                            specListBuilder.addCoveredId(SpecificationItemId.parseId(itemContent));
+                        }
                     }
                 }
             }

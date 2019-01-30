@@ -178,5 +178,22 @@ class SpecificationConverterTest {
             assertThat(output).extracting(SpecificationItem::getDescription)
                     .first().asString().isEmpty();
         }
+
+        @Test
+        @DisplayName("When 'Covers:' is found, then the following list is converted to coverage links")
+        void whenCoversThenListIsConvertedToCoverageLinks() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Covers: " + "\n\n" +
+                    "* `+" + AN_OTHER_SPEC_ID + "+`";
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getCoveredIds)
+                    .first().asList().containsOnly(AN_OTHER_SPEC_ID);
+        }
     }
 }

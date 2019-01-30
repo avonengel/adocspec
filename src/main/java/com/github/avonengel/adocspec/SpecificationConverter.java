@@ -4,6 +4,8 @@ import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.Cursor;
 import org.asciidoctor.ast.Document;
+import org.asciidoctor.ast.List;
+import org.asciidoctor.ast.ListItem;
 import org.asciidoctor.ast.PhraseNode;
 import org.asciidoctor.ast.Section;
 import org.asciidoctor.ast.StructuralNode;
@@ -33,7 +35,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     private enum State {
         START,
-        SPEC
+        SPEC,
+        COVERS,
     }
 
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
@@ -87,6 +90,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 state = State.SPEC;
             } else {
                 final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
+                final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
+                final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
                 if (needsMatcher.matches()) {
                     for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
                         specListBuilder.addNeededArtifactType(artifactType);

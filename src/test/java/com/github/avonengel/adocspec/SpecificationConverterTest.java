@@ -159,5 +159,24 @@ class SpecificationConverterTest {
             assertThat(output).extracting(SpecificationItem::getDescription)
                     .first().asString().isEmpty();
         }
+
+        @Test
+        @DisplayName("When a 'Rationale:' contains multiple lines, then the spec's rationale is set")
+        void whenRationaleMultilineThenRationaleIsSet() {
+            // Arrange
+            final String multilineRationale = A_RATIONALE + "\n" + A_RATIONALE;
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Rationale: " + multilineRationale;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getRationale)
+                    .containsOnly(multilineRationale);
+            assertThat(output).extracting(SpecificationItem::getDescription)
+                    .first().asString().isEmpty();
+        }
     }
 }

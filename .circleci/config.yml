@@ -13,7 +13,7 @@ jobs:
       - run: ./gradlew --no-daemon build
       - store_test_results:
           path: build/test-results
-      - run: ./gradlew --no-daemon asciidoctor
+      - run: ./gradlew --no-daemon asciidoctor traceRequirements
       - save_cache:
           key: gradle-home-v2-{{ checksum "build.gradle" }}
           paths:

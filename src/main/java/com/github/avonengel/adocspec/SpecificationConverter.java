@@ -19,16 +19,17 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
+    private static final Pattern RATIONALE_PATTERN = Pattern.compile(MdPattern.RATIONALE.getPattern().pattern() + "(.*)");
 
     private enum State {
         START,
@@ -91,7 +92,10 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                         specListBuilder.addNeededArtifactType(artifactType);
                     }
                 } else {
-                    if (state == State.SPEC) {
+                    final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
+                    if (rationaleMatcher.matches()) {
+                        specListBuilder.appendRationale(rationaleMatcher.group(1));
+                    } else if (state == State.SPEC) {
                         specListBuilder.appendDescription(convertedBlock);
                     }
                 }

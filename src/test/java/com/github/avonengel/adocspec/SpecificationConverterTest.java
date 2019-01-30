@@ -25,6 +25,7 @@ class SpecificationConverterTest {
     private static final SpecificationItemId AN_OTHER_SPEC_ID = SpecificationItemId.createId(AN_OTHER_TYPE, AN_OTHER_SPEC_NAME, A_SPEC_VERSION);
     private static final String A_DESCRIPTION = "some text content, to be used as description";
     private static final String A_PARAGRAPH = "some text content, not to be used by spec";
+    private static final String A_RATIONALE = "some text content, to be used as rationale";
     private static Asciidoctor asciidoctor;
 
     @BeforeAll
@@ -139,6 +140,24 @@ class SpecificationConverterTest {
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getNeedsArtifactTypes)
                     .first().asList().containsOnly(AN_OTHER_TYPE);
+        }
+
+        @Test
+        @DisplayName("When a paragraph that starts with 'Rationale:', then the spec's rationale is set")
+        void whenParagraphStartsWithRationaleThenRationaleIsSet() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Rationale: " + A_RATIONALE;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getRationale)
+                    .containsOnly(A_RATIONALE);
+            assertThat(output).extracting(SpecificationItem::getDescription)
+                    .first().asString().isEmpty();
         }
     }
 }

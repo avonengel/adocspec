@@ -34,3 +34,25 @@ The alternative approach that is currently being explored is to write an AsciiDo
 This converter implementation is then called by AsciiDoctor for each element in the AST of the document - this time
 including sub-paragraph level items.
 
+== Converter Design
+
+This section describes the software design related to the implementation of an `org.asciidoctor.converter.Converter`
+that extends AsciiDoctorJ to provide the ability to generate OFT specification item XML output for an AsciiDoc document.
+
+`+dsn~oft-equivalent.id~1+`
+
+The `SpecificationConverter` accepts any paragraph as a specification item's ID, if the text content evaluates to something
+that matches the pattern described in the OFT specification (which is reiterated in `+req~oft-equivalent.id~1+` for
+convenience).
+
+NOTE: In contrast to Markdown, it is not enough to enclose the ID in backticks (```). This will only cause the enclosed
+text to be set in `monospace`. With the OFT ID format containing tilde symbols, this leads to the actual ID part to be
+set in subscript (e.g. `dsn~oft-equivalent.id~1`). In order for this to render correctly, use
+link:https://asciidoctor.org/docs/user-manual/#literal-monospace[literal monospace]: `pass:[`+]` and `pass:[+`]`,
+e.g. `pass:[`+dsn~oft-equivalent.id~1+`]`.
+
+Needs: impl, test
+
+Covers:
+
+* +req~oft-equivalent.id~1+

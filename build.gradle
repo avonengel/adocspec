@@ -51,3 +51,4 @@ requirementTracing {
     inputDirectories = files(asciidoctor.outputDir)
     reportFormat = 'html'
 }
+collectRequirements.dependsOn(asciidoctor)

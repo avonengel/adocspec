@@ -16,32 +16,6 @@ possible by using the openfasttrace tracing toolchain.
 
 Needs: feat
 
-== Exploration
-
-.TreeProcessor
-The initial approach was to write a combination of AsciiDoctor `extensions`, mainly a TreeProcessor. This looked
-promising at first, but soon led to the following problem: To export a specification item's text fields, the content
-of the AsciiDoctor AST nodes needs to be accessed by the TreeProcessor. However, this does not seem to be supported
-by AsciiDoctor's extension model. A `TreeProcessor` has the ability to traverse the block level content of the document,
-but does not get AST access to e.g. paragraph content. This leaves the following options to access paragraph content:
-
-AsciiDoc source::
-It is possible to retrieve the source in AsciiDoc format. This would leave AsciiDoc markup in the specification item
-content, which would be acceptable. However, other inline content will also be unprocessed. The main issue are references
-to AsciiDoc variables.
-Content::
-It is also possible to retrieve the '`content`' of a block. This will _convert_ the paragraph content to the current
-output format, though. Converting to HTML means the specification item content would contain HTML tags, while converting
-to DocBook results in DocBook tags, and so on.
-Convert::
-The last option is to convert the whole block. This results in the same output as if the '`content`' was accessed, plus
-encompassing tags, depending on the type of block.
-
-.Converter
-The alternative approach that is currently being explored is to write an AsciiDoc Converter to generate ReqM XML output.
-This converter implementation is then called by AsciiDoctor for each element in the AST of the document - this time
-including sub-paragraph level items.
-
 == Features
 
 `+feat~oft-equivalent~1+`

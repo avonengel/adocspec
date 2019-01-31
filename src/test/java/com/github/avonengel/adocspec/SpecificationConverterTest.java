@@ -40,6 +40,7 @@ class SpecificationConverterTest {
     }
 
 
+    // [test->dsn~oft-equivalent.id~1]
     @Test
     @DisplayName("When a Spec ID is found, then a Spec item is created")
     void whenIdIsFoundSpecIsCreated() {
@@ -54,6 +55,7 @@ class SpecificationConverterTest {
         assertThat(output).extracting(SpecificationItem::getId).containsOnly(A_SPEC_ID);
     }
 
+    // [test->dsn~oft-equivalent.id~1]
     @Test
     @DisplayName("When a Spec ID is found inside a section, then a Spec item is created")
     void whenIdIsFoundInSectionSpecIsCreated() {

@@ -48,7 +48,7 @@ asciidoctor {
 }
 
 requirementTracing {
-    inputDirectories = files(asciidoctor.outputDir)
+    inputDirectories = files(asciidoctor.outputDir, 'src')
     reportFormat = 'html'
 }
 collectRequirements.dependsOn(asciidoctor)

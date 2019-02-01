@@ -1,0 +1,18 @@
+= AdocSpec
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:oft: https://github.com/itsallcode/openfasttrace[OpenFastTrace]
+
+The adocspec project aims at making writing requirements in AsciiDoc format
+possible by using the {oft} tracing toolchain, and extending the syntax they defined for Markdown to AsciiDoc.
+
+== Project Status
+
+The project is currently in an exploratory status, where different implementation options are being evaluated. While
+requirements may already be specified, not all of the elements used by {oft} are supported, yet.
+See <<src/docs/asciidoc/spec#,the specification>> for an example of what is supported.

@@ -13,6 +13,11 @@ possible by using the {oft} tracing toolchain, and extending the syntax they def
 
 == Project Status
 
+image:https://circleci.com/gh/avonengel/adocspec.svg?style=svg["CircleCI", link="https://circleci.com/gh/avonengel/adocspec"]
+
 The project is currently in an exploratory status, where different implementation options are being evaluated. While
 requirements may already be specified, not all of the elements used by {oft} are supported, yet.
 See <<src/docs/asciidoc/spec#,the specification>> for an example of what is supported.
+
+All supported elements are tested, so you might take a look at
+link:src/test/java/com/github/avonengel/adocspec/SpecificationConverterTest.java[SpecificationConverterTest].

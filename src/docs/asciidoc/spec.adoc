@@ -31,6 +31,22 @@ Covers:
 
 * +goal~adocspec-goal~1+
 
+
+`+feat~oft-asciidoc-extension~1+`
+
+Status: draft
+
+AdocSpec extends the OFT equivalent syntax with elements from AsciiDoc.
+
+Rationale: Some elements of AsciiDoc integrate easily with the OFT syntax. The best example are AsciiDoc captions:
+they can easily be used to declare a paragraph as description, rationale, or comment.
+
+Needs: req
+
+Covers:
+
+* +goal~adocspec-goal~1+
+
 == Supported AsciiDoc Format
 
 The AdocSpec extension for AsciiDoctor supports a variety of AsciiDoc elements to specify requirements. The details are
@@ -61,3 +77,68 @@ Needs: dsn
 Covers:
 
 * +feat~oft-equivalent~1+
+
+== OFT AsciiDoc Extensions
+
+This section contains ideas for some extensions of the OFT syntax with AsciiDoc elements.
+
+=== Captions
+
+AsciiDoc captions can easily be used to replace the "`Description:`", "`Rationale:`", or "`Comment:`" prefixes.
+
+Examples:
+....
+.Description
+A specification item's description may be defined by using the caption "`Description`".
+
+.Rationale
+A specification item's rationale may be defined by using the caption "`Rationale`".
+
+.Comment
+A specification item's comment may be defined by using the caption "`Comment`".
+....
+
+renders as:
+====
+.Description
+A specification item's description may be defined by using the caption "`Description`".
+
+.Rationale
+A specification item's rationale may be defined by using the caption "`Rationale`".
+
+.Comment
+A specification item's comment may be defined by using the caption "`Comment`".
+====
+
+=== Roles
+
+AsciiDoc allows to define roles for a paragraph. This could also be used to declare if a paragraph should be used for
+description, rationale, or comment. However, just assigning a role does not change the conversion to the presentation format.
+This means the output format converter needs some additional configuration to make the roles change the presentation.
+
+On the other hand, some people might prefer to just declare these distinctions for the tracing toolchain, and present
+the content in the presentation format without any visible clues as to which is what, and let the reader determine it
+from the content itself.
+
+=== Block Macros
+
+AsciiDoc also allows extensions to define their own block macros. This could be used in various ways:
+
+Specification Item end marker::
+There is no end marker for a specificaiton item in OFT. Instead, a specification item ends when the section ends,
+or another specification item starts via a its ID. It is impossible to add a paragraph to the informative
+content _after_ a specification item, but _inside_ the same section.
+
+Replacement for Needs::
+A block macro could be used to define the needed coverage types. This does not really add much value to the source document,
+but could be rendered to the presentation format into a more complex structure, for example by using a template.
+
+Replacement for Covers::
+A block macro could be used to define the covered specification item IDs. Again, this does not add much value to the source
+format, could be rendered to the presentation format into a more complex structure, for example by using a template.
+
+=== Link Anchors
+
+It would be really easy and useful if links could reference a requirement by ID. For this purpose, link anchors could be
+added, probably through a https://asciidoctor.org/docs/user-manual/#extension-points[TreeProcessor].
+

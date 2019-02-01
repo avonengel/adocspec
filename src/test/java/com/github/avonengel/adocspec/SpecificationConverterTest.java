@@ -2,6 +2,7 @@ package com.github.avonengel.adocspec;
 
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.OptionsBuilder;
+import org.itsallcode.openfasttrace.core.ItemStatus;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,7 +16,8 @@ import java.util.List;
 import static org.asciidoctor.Asciidoctor.Factory.create;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SpecificationConverterTest {
+class SpecificationConverterTest
+{
     private static final String A_TYPE = "dummy";
     private static final String AN_OTHER_TYPE = "othertype";
     private static final String A_SPEC_NAME = "a-spec";
@@ -26,24 +28,27 @@ class SpecificationConverterTest {
     private static final String A_DESCRIPTION = "some text content, to be used as description";
     private static final String A_PARAGRAPH = "some text content, not to be used by spec";
     private static final String A_RATIONALE = "some text content, to be used as rationale";
+    private static final String STATUS_DRAFT = "draft";
     private static Asciidoctor asciidoctor;
 
     @BeforeAll
-    static void prepareAsciidoctor() {
+    static void prepareAsciidoctor()
+    {
         asciidoctor = create();
     }
 
     @BeforeEach
-    void prepareSpecProcessor() {
+    void prepareSpecProcessor()
+    {
         asciidoctor.unregisterAllExtensions();
         asciidoctor.javaConverterRegistry().register(SpecificationConverter.class, "spec");
     }
 
-
     // [test->dsn~oft-equivalent.id~1]
     @Test
     @DisplayName("When a Spec ID is found, then a Spec item is created")
-    void whenIdIsFoundSpecIsCreated() {
+    void whenIdIsFoundSpecIsCreated()
+    {
         // Arrange
         String input = "`+" + A_SPEC_ID + "+`";
 
@@ -58,7 +63,8 @@ class SpecificationConverterTest {
     // [test->dsn~oft-equivalent.id~1]
     @Test
     @DisplayName("When a Spec ID is found inside a section, then a Spec item is created")
-    void whenIdIsFoundInSectionSpecIsCreated() {
+    void whenIdIsFoundInSectionSpecIsCreated()
+    {
         // Arrange
         String input = "== A Section Title\n" +
                 "`+" + A_SPEC_ID + "+`";
@@ -73,7 +79,8 @@ class SpecificationConverterTest {
 
     @Test
     @DisplayName("When a new section begins, then the spec item is terminated")
-    void whenSectionBeginsSpecIsTerminated() {
+    void whenSectionBeginsSpecIsTerminated()
+    {
         // Arrange
         String input = "== A Section Title\n" +
                 "`+" + A_SPEC_ID + "+`\n\n" +
@@ -86,11 +93,12 @@ class SpecificationConverterTest {
         // Assert
         assertThat(output).isNotEmpty();
         assertThat(output).extracting(SpecificationItem::getDescription).first().asString()
-                .doesNotContain(A_PARAGRAPH);
+                          .doesNotContain(A_PARAGRAPH);
     }
 
     @Test
-    void onlyParagraphsAfterSectionIdAreUsed() {
+    void onlyParagraphsAfterSectionIdAreUsed()
+    {
         // Arrange
         String input = A_PARAGRAPH + "\n\n" +
                 "`+" + A_SPEC_ID + "+`";
@@ -101,21 +109,24 @@ class SpecificationConverterTest {
         // Assert
         assertThat(output).isNotEmpty();
         assertThat(output).extracting(SpecificationItem::getDescription).first().asString()
-                .isEmpty();
+                          .isEmpty();
     }
 
     @SuppressWarnings("unchecked")
-    private List<SpecificationItem> convertToSpecList(String input) {
+    private List<SpecificationItem> convertToSpecList(String input)
+    {
         return asciidoctor.convert(input, OptionsBuilder.options().backend("spec"), List.class);
     }
 
     @DisplayName("Given a specification item ID")
     @Nested
-    class GivenID {
+    class GivenID
+    {
 
         @Test
         @DisplayName("When a paragraph without any markers is found, then the paragraph becomes the spec's description")
-        void whenParagraphThenDescription() {
+        void whenParagraphThenDescription()
+        {
             // Arrange
             String input = "`+" + A_SPEC_ID + "+`\n\n" +
                     A_DESCRIPTION;
@@ -130,7 +141,8 @@ class SpecificationConverterTest {
 
         @Test
         @DisplayName("When a paragraph that starts with 'Needs:', then the spec's needs are set")
-        void whenParagraphStartsWithNeedsThenNeedsIsSet() {
+        void whenParagraphStartsWithNeedsThenNeedsIsSet()
+        {
             // Arrange
             String input = "`+" + A_SPEC_ID + "+`\n\n" +
                     "Needs: " + AN_OTHER_TYPE;
@@ -141,12 +153,13 @@ class SpecificationConverterTest {
             // Assert
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getNeedsArtifactTypes)
-                    .first().asList().containsOnly(AN_OTHER_TYPE);
+                              .first().asList().containsOnly(AN_OTHER_TYPE);
         }
 
         @Test
         @DisplayName("When a paragraph that starts with 'Rationale:', then the spec's rationale is set")
-        void whenParagraphStartsWithRationaleThenRationaleIsSet() {
+        void whenParagraphStartsWithRationaleThenRationaleIsSet()
+        {
             // Arrange
             String input = "`+" + A_SPEC_ID + "+`\n\n" +
                     "Rationale: " + A_RATIONALE;
@@ -157,14 +170,15 @@ class SpecificationConverterTest {
             // Assert
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getRationale)
-                    .containsOnly(A_RATIONALE);
+                              .containsOnly(A_RATIONALE);
             assertThat(output).extracting(SpecificationItem::getDescription)
-                    .first().asString().isEmpty();
+                              .first().asString().isEmpty();
         }
 
         @Test
         @DisplayName("When a 'Rationale:' contains multiple lines, then the spec's rationale is set")
-        void whenRationaleMultilineThenRationaleIsSet() {
+        void whenRationaleMultilineThenRationaleIsSet()
+        {
             // Arrange
             final String multilineRationale = A_RATIONALE + "\n" + A_RATIONALE;
             String input = "`+" + A_SPEC_ID + "+`\n\n" +
@@ -176,14 +190,15 @@ class SpecificationConverterTest {
             // Assert
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getRationale)
-                    .containsOnly(multilineRationale);
+                              .containsOnly(multilineRationale);
             assertThat(output).extracting(SpecificationItem::getDescription)
-                    .first().asString().isEmpty();
+                              .first().asString().isEmpty();
         }
 
         @Test
         @DisplayName("When 'Covers:' is found, then the following list is converted to coverage links")
-        void whenCoversThenListIsConvertedToCoverageLinks() {
+        void whenCoversThenListIsConvertedToCoverageLinks()
+        {
             // Arrange
             String input = "`+" + A_SPEC_ID + "+`\n\n" +
                     "Covers: " + "\n\n" +
@@ -195,7 +210,24 @@ class SpecificationConverterTest {
             // Assert
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getCoveredIds)
-                    .first().asList().containsOnly(AN_OTHER_SPEC_ID);
+                              .first().asList().containsOnly(AN_OTHER_SPEC_ID);
+        }
+
+        @Test
+        @DisplayName("When 'Status:' is found, remainder is used as status")
+        void whenStatusThenStatusIsSet()
+        {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Status: " + STATUS_DRAFT;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getStatus)
+                              .containsOnly(ItemStatus.DRAFT);
         }
     }
 }

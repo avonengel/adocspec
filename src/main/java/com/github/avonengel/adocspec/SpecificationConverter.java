@@ -10,6 +10,7 @@ import org.asciidoctor.ast.PhraseNode;
 import org.asciidoctor.ast.Section;
 import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.converter.AbstractConverter;
+import org.itsallcode.openfasttrace.core.ItemStatus;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.exporter.specobject.SpecobjectWriterExporterFactory;
@@ -93,6 +94,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
                 final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
                 final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
+                final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
                 if (needsMatcher.matches()) {
                     for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
                         specListBuilder.addNeededArtifactType(artifactType);
@@ -101,6 +103,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     specListBuilder.appendRationale(rationaleMatcher.group(1));
                 } else if (coversMatcher.matches()) {
                     state = State.COVERS;
+                } else if (statusMatcher.matches()) {
+                    specListBuilder.setStatus(ItemStatus.parseString(statusMatcher.group(1)));
                 } else if (state == State.SPEC) {
                     specListBuilder.appendDescription(convertedBlock);
                 }

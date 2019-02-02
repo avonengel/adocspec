@@ -1,0 +1,15 @@
+= AdocSpec Implementation Overview v{version}
+
+The implementation integrates with link:https://github.com/asciidoctor/asciidoctorj[AsciiDoctorJ^]
+via a https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html[ServiceProvider^],
+which loads {@link com.github.avonengel.adocspec.SpecExtension}.
+
+The {@linkplain com.github.avonengel.adocspec.SpecExtension} then registers -- among others --
+the {@link com.github.avonengel.adocspec.SpecificationConverter}:
+[source,java]
+----
+include::{src-with-package}/SpecExtension.java[tag=register]
+----
+
+The {@link com.github.avonengel.adocspec.SpecificationConverter} then handles the conversion
+of AsciiDoc to ReqM XML.

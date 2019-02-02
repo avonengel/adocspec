@@ -7,9 +7,9 @@ which loads {@link com.github.avonengel.adocspec.SpecExtension}.
 The {@linkplain com.github.avonengel.adocspec.SpecExtension} then registers -- among others --
 the {@link com.github.avonengel.adocspec.SpecificationConverter}:
 [source,java]
+.SpecExtension.java
 ----
 include::{src-with-package}/SpecExtension.java[tag=register]
 ----
-
-The {@link com.github.avonengel.adocspec.SpecificationConverter} then handles the conversion
-of AsciiDoc to ReqM XML.
+<1> The {@link com.github.avonengel.adocspec.SpecificationConverter} is registered with
+AsciiDoctorJ's registry, it handles the conversion of AsciiDoc to ReqM XML.

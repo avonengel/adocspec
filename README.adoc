@@ -11,7 +11,7 @@ endif::[]
 The adocspec project aims at making writing requirements in AsciiDoc format
 possible by using the {oft} tracing toolchain, and extending the syntax they defined for Markdown to AsciiDoc.
 
-== Project Status
+== Project Status: Experimental
 
 image:https://circleci.com/gh/avonengel/adocspec.svg?style=svg["CircleCI", link="https://circleci.com/gh/avonengel/adocspec"]
 
@@ -21,5 +21,3 @@ See <<src/docs/asciidoc/spec#,the specification>> for an example of what is supp
 
 All supported elements are tested, so you might take a look at
 link:src/test/java/com/github/avonengel/adocspec/SpecificationConverterTest.java[SpecificationConverterTest].
-
-include::src/docs/asciidoc/index.adoc[leveloffset=+1]

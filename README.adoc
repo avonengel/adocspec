@@ -21,3 +21,5 @@ See <<src/docs/asciidoc/spec#,the specification>> for an example of what is supp
 
 All supported elements are tested, so you might take a look at
 link:src/test/java/com/github/avonengel/adocspec/SpecificationConverterTest.java[SpecificationConverterTest].
+
+include::src/docs/asciidoc/index.adoc[leveloffset=+1]

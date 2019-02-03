@@ -2,4 +2,6 @@
 
 * <<spec#,Specification>>
 * <<design#,Design>>
+ifndef::env-github[]
 * link:javadoc/index.html[JavaDoc]
+endif::[]

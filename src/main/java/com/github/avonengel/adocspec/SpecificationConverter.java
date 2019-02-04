@@ -87,6 +87,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             final String convertedBlock = block.getContent().toString();
             // [impl->dsn~oft-equivalent.id~1]
             if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
+                specListBuilder.endSpecificationItem();
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
                 state = State.SPEC;

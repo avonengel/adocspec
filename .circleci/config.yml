@@ -8,14 +8,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - gradle-home-v2-{{ checksum "build.gradle" }}
-            - gradle-home-v2
+            - gradle-home-v3-{{ checksum "build.gradle" }}
+            - gradle-home-v3
       - run: ./gradlew --no-daemon build
       - store_test_results:
           path: build/test-results
       - run: ./gradlew --no-daemon documentation traceRequirements docZip
       - save_cache:
-          key: gradle-home-v2-{{ checksum "build.gradle" }}
+          key: gradle-home-v3-{{ checksum "build.gradle" }}
           paths:
             - ~/.gradle
       - store_artifacts:

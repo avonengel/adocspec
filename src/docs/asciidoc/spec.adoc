@@ -59,7 +59,8 @@ This section lists the detailed syntax requirements.
 
 `+req~oft-equivalent.id~1+`
 
-A requirement may be defined by simply adding a paragraph that only contains a specification item ID in OFT syntax:
+A requirement definition may be started by a paragraph that only contains a specification item ID in OFT syntax (compare
+link:https://github.com/itsallcode/openfasttrace/blob/develop/doc/design.md#markdown-specification-item-id-format[`+dsn~md.specification-item-id-format~2+`]):
 ....
 requirement-id = type "~" id "~" revision
 
@@ -71,6 +72,18 @@ id-fragment = ALPHA *(ALPHA / DIGIT / "_" / "-")
 
 revision = 1*DIGIT
 ....
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
+
+
+`+req~oft-equivalent.description~1+`
+
+Any paragraph inside a specification item that has no special meaning attached via keywords, is added to the
+description of the item.
 
 Needs: dsn
 
@@ -129,13 +142,12 @@ There is no end marker for a specificaiton item in OFT. Instead, a specification
 or another specification item starts via a its ID. It is impossible to add a paragraph to the informative
 content _after_ a specification item, but _inside_ the same section.
 
-Replacement for Needs::
-A block macro could be used to define the needed coverage types. This does not really add much value to the source document,
-but could be rendered to the presentation format into a more complex structure, for example by using a template.
-
-Replacement for Covers::
-A block macro could be used to define the covered specification item IDs. Again, this does not add much value to the source
-format, could be rendered to the presentation format into a more complex structure, for example by using a template.
+Replacement for Needs/Covers/ID::
+A block macro could be used to define the needed coverage types, covered specification item IDs, or the ID of the
+specification item. This does not really add much value to the source document, but could be rendered to the
+presentation format into a more complex structure, for example by using a template.
++
+At Elektrobit, we have an XSL stylesheet to transform specification items in XML format to DocBook table.
 
 === Link Anchors
 

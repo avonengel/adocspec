@@ -107,6 +107,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 } else if (statusMatcher.matches()) {
                     specListBuilder.setStatus(ItemStatus.parseString(statusMatcher.group(1)));
                 } else if (state == State.SPEC) {
+                    // [impl->dsn~oft-equivalent.description~1]
                     specListBuilder.appendDescription(convertedBlock);
                 }
             }

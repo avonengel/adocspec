@@ -56,3 +56,15 @@ Needs: impl, test
 Covers:
 
 * +req~oft-equivalent.id~1+
+
+
+`+dsn~oft-equivalent.description~1+`
+
+The `SpecificationConverter` adds any paragraph that has no special meaning attached via prefix keywords to the
+specification item's description.
+
+Needs: impl, test
+
+Covers:
+
+* +req~oft-equivalent.description~1+

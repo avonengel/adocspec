@@ -123,6 +123,27 @@ class SpecificationConverterTest {
                 .isEmpty();
     }
 
+    @Test
+    @DisplayName("Coverage may be forwarded")
+    void forwardedCoverage() {
+        // Arrange
+        String forwardingType = "forwardingtype";
+        String neededType = "neededtype";
+        String input = forwardingType + " -> " + neededType + " : " +"`+" + A_SPEC_ID + "+`";
+        SpecificationItem expectedSpec = SpecificationItem.builder()
+                                                          .addCoveredId(A_SPEC_ID)
+                                                          .forwards(true)
+                                                          .addNeedsArtifactType(neededType)
+                                                          .id(forwardingType, A_SPEC_ID.getName(), A_SPEC_ID.getRevision())
+                                                          .build();
+
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).containsOnly(expectedSpec);
+    }
+
     @SuppressWarnings("unchecked")
     private List<SpecificationItem> convertToSpecList(String input) {
         return asciidoctor.convert(input, OptionsBuilder.options().backend("spec"), List.class);

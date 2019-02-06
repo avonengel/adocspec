@@ -144,6 +144,23 @@ class SpecificationConverterTest {
         assertThat(output).first().isEqualToComparingFieldByField(expectedSpec);
     }
 
+    @Test
+    @DisplayName("when forwarding item is found, then previous item is completed")
+    void whenForwardingItemThenPreviousItemIsCompleted() {
+        // Arrange
+        String forwardingType = "forwardingtype";
+        String neededType = "neededtype";
+        String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                forwardingType + " -> " + neededType + " : " +"`+" + A_SPEC_ID + "+`";
+        SpecificationItemId expectedId = SpecificationItemId.createId(forwardingType, A_SPEC_ID.getName(), A_SPEC_ID.getRevision());
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).hasSize(2);
+        assertThat(output).extracting(SpecificationItem::getId).containsExactly(A_SPEC_ID, expectedId);
+    }
+
     @SuppressWarnings("unchecked")
     private List<SpecificationItem> convertToSpecList(String input) {
         return asciidoctor.convert(input, OptionsBuilder.options().backend("spec"), List.class);

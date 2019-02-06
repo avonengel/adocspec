@@ -109,6 +109,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
                 state = State.SPEC;
             } else if (forwardMatcher.matches()) {
+                specListBuilder.endSpecificationItem();
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setForwards(true);
                 SpecificationItemId coveredId = SpecificationItemId.parseId(forwardMatcher.group("coveredId"));
@@ -119,6 +120,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     specListBuilder.addNeededArtifactType(needsType.trim());
                 }
                 specListBuilder.endSpecificationItem();
+                state = State.START;
             } else {
                 final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
                 final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);

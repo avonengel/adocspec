@@ -141,7 +141,7 @@ class SpecificationConverterTest {
         final List<SpecificationItem> output = convertToSpecList(input);
 
         // Assert
-        assertThat(output).containsOnly(expectedSpec);
+        assertThat(output).first().isEqualToComparingFieldByField(expectedSpec);
     }
 
     @SuppressWarnings("unchecked")

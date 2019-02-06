@@ -15,6 +15,7 @@ import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.exporter.specobject.SpecobjectWriterExporterFactory;
 import org.itsallcode.openfasttrace.importer.SpecificationListBuilder;
+import org.itsallcode.openfasttrace.importer.markdown.MarkdownForwardingSpecificationItem;
 import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,25 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
     private static final Pattern RATIONALE_PATTERN = Pattern.compile(MdPattern.RATIONALE.getPattern().pattern() + "(.*)", Pattern.DOTALL);
+    private static final Pattern FORWARD_PATTERN = Pattern.compile("(?<forwardingType>[a-zA-Z]+)"
+            + "\\s*"
+            + "&#8594;"
+            + "\\s*"
+            + "(?<needsList>[a-zA-Z]+"
+            + "(?:,\\s*"
+            + "[a-zA-Z]+"
+            + ")*)"
+            + "\\s*"
+            + ":"
+            + "\\s*(?<coveredId>"
+            + SpecificationItemId.ID_PATTERN
+            + ")");
 
     private enum State {
         START,
@@ -85,12 +100,25 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         } else if (node instanceof Block) {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
+            Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);
             // [impl->dsn~oft-equivalent.id~1]
-            if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
+            if (MdPattern.ID.getPattern().matcher(convertedBlock).matches())
+            {
                 specListBuilder.endSpecificationItem();
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
                 state = State.SPEC;
+            } else if (forwardMatcher.matches()) {
+                specListBuilder.beginSpecificationItem();
+                specListBuilder.setForwards(true);
+                SpecificationItemId coveredId = SpecificationItemId.parseId(forwardMatcher.group("coveredId"));
+                specListBuilder.addCoveredId(coveredId);
+                specListBuilder.setId(SpecificationItemId.createId(forwardMatcher.group("forwardingType"), coveredId.getName(), coveredId.getRevision()));
+                String[] needsTypes = forwardMatcher.group("needsList").split(",");
+                for (String needsType : needsTypes) {
+                    specListBuilder.addNeededArtifactType(needsType.trim());
+                }
+                specListBuilder.endSpecificationItem();
             } else {
                 final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
                 final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);

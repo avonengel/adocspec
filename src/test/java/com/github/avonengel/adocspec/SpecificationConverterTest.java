@@ -221,6 +221,7 @@ class SpecificationConverterTest {
                     .first().asString().isEmpty();
         }
 
+        // [test->dsn~oft-equivalent.rationale~1]
         @Test
         @DisplayName("When a 'Rationale:' contains multiple lines, then the spec's rationale is set")
         void whenRationaleMultilineThenRationaleIsSet() {

@@ -135,6 +135,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                         specListBuilder.addNeededArtifactType(artifactType);
                     }
                 } else if (rationaleMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.rationale~1]
                     specListBuilder.appendRationale(rationaleMatcher.group(1));
                 } else if (coversMatcher.matches()) {
                     state = State.COVERS;

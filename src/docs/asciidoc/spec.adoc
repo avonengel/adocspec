@@ -99,6 +99,19 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+
+`+req~oft-equivalent.rationale~1+`
+
+Any paragraph following the keyword "`Rationale:`" is appended to the rationale of the specification
+item.
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
+
+
 `+req~oft-equivalent.needs~1+`
 
 The needed coverage types are specified in AsciiDoc just like in Markdown. The keyword "`Needs:`" is
@@ -151,10 +164,6 @@ Needs: dsn
 Covers:
 
 * +feat~oft-equivalent~1+
-
-TODO:
-
-* rationale
 
 == OFT AsciiDoc Extensions
 

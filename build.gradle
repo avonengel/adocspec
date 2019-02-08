@@ -11,7 +11,7 @@ repositories {
 version = '0.1.0-SNAPSHOT'
 
 asciidoctorj {
-    version = '1.6.0-RC.2'
+    version = '1.6.0'
 }
 configurations.asciidoctor.extendsFrom configurations.implementation
 dependencies {

@@ -241,6 +241,25 @@ class SpecificationConverterTest {
                     .first().asString().isEmpty();
         }
 
+        @Test
+        @DisplayName("When a paragraph follows a rationale paragraph, then it is appended to the rationale")
+        void whenParagraphFollowsRationaleThenRationaleIsAppended() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Rationale: " + A_RATIONALE + "\n\n" +
+                    A_RATIONALE;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getRationale)
+                    .first().asString().containsSequence(A_RATIONALE, A_RATIONALE);
+            assertThat(output).extracting(SpecificationItem::getDescription)
+                    .first().asString().isEmpty();
+        }
+
         // [test->dsn~oft-equivalent.covers~1]
         @Test
         @DisplayName("When 'Covers:' is found, then the following list is converted to coverage links")

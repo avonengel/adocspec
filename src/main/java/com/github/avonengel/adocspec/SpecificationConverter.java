@@ -53,6 +53,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         START,
         SPEC,
         COVERS,
+        RATIONALE,
     }
 
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
@@ -136,6 +137,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     }
                 } else if (rationaleMatcher.matches()) {
                     // [impl->dsn~oft-equivalent.rationale~1]
+                    state = State.RATIONALE;
                     specListBuilder.appendRationale(rationaleMatcher.group(1));
                 } else if (coversMatcher.matches()) {
                     state = State.COVERS;
@@ -145,6 +147,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 } else if (state == State.SPEC) {
                     // [impl->dsn~oft-equivalent.description~1]
                     specListBuilder.appendDescription(convertedBlock);
+                } else if (state == State.RATIONALE) {
+                    specListBuilder.appendRationale(convertedBlock);
                 }
             }
         } else if (node instanceof List) {

@@ -258,6 +258,7 @@ class SpecificationConverterTest {
                     .first().asList().containsOnly(AN_OTHER_SPEC_ID);
         }
 
+        // [test->dsn~oft-equivalent.status~1]
         @Test
         @DisplayName("When 'Status:' is found, remainder is used as status")
         void whenStatusThenStatusIsSet() {

@@ -138,10 +138,22 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+`+req~oft-equivalent.status~1+`
+
+The status field of specification item may be set as follows:
+
+....
+status = "Status:" *WSP ("approved" / "proposed" / "draft")
+....
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
+
 TODO:
 
-* covers
-* status
 * rationale
 
 == OFT AsciiDoc Extensions

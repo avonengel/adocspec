@@ -139,6 +139,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 } else if (coversMatcher.matches()) {
                     state = State.COVERS;
                 } else if (statusMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.status~1]
                     specListBuilder.setStatus(ItemStatus.parseString(statusMatcher.group(1)));
                 } else if (state == State.SPEC) {
                     // [impl->dsn~oft-equivalent.description~1]

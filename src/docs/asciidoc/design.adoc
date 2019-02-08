@@ -66,3 +66,5 @@ dsn -> impl, test: +req~oft-equivalent.description~1+
 dsn -> impl, test: +req~oft-equivalent.needs~1+
 
 dsn -> impl, test: +req~oft-equivalent.covers~1+
+
+dsn -> impl, test: +req~oft-equivalent.status~1+

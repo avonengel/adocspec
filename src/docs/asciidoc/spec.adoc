@@ -5,6 +5,13 @@ Axel von Engel <a.vonengel@gmail.com>
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
 :oft-design: https://github.com/itsallcode/openfasttrace/blob/develop/doc/design.md
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
 
 This is the specification for the adocspec project.
 

@@ -4,6 +4,13 @@ Axel von Engel <a.vonengel@gmail.com>
 :revnumber: {project-version}
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
 
 This is the design document for the AdocSpec project. It describes the software design that implements the requirements
 found in <<spec#,the specification>> in detail.
@@ -59,7 +66,7 @@ Covers:
 
 ---
 
-The remainder of this section lists forwarding specification items that do not require further design"
+The remainder of this section lists forwarding specification items that do not require further design
 
 dsn -> impl, test: +req~oft-equivalent.description~1+
 

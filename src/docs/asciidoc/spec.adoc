@@ -4,6 +4,7 @@ Axel von Engel <a.vonengel@gmail.com>
 :revnumber: {project-version}
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
+:oft-design: https://github.com/itsallcode/openfasttrace/blob/develop/doc/design.md
 
 This is the specification for the adocspec project.
 
@@ -32,6 +33,12 @@ Covers:
 * +goal~adocspec-goal~1+
 
 
+****
+The OFT Gradle plugin currently does not support exclusion of "`draft`" items, therefore the
+following spec is disabled.
+****
+
+----
 `+feat~oft-asciidoc-extension~1+`
 
 Status: draft
@@ -46,6 +53,7 @@ Needs: req
 Covers:
 
 * +goal~adocspec-goal~1+
+----
 
 == Supported AsciiDoc Format
 
@@ -60,7 +68,7 @@ This section lists the detailed syntax requirements.
 `+req~oft-equivalent.id~1+`
 
 A requirement definition may be started by a paragraph that only contains a specification item ID in OFT syntax (compare
-link:https://github.com/itsallcode/openfasttrace/blob/develop/doc/design.md#markdown-specification-item-id-format[`+dsn~md.specification-item-id-format~2+`]):
+{oft-design}#markdown-specification-item-id-format[`+dsn~md.specification-item-id-format~2+`]):
 ....
 requirement-id = type "~" id "~" revision
 
@@ -84,6 +92,23 @@ Covers:
 
 Any paragraph inside a specification item that has no special meaning attached via keywords, is added to the
 description of the item.
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
+
+`+req~oft-equivalent.needs~1+`
+
+The needed coverage types are specified in AsciiDoc just like in Markdown. The keyword "`Needs:`" is
+placed before a list of specification item types that are needed to fully cover the current
+specification item. Compare
+{oft-design}#markdown-needs-list[`+dsn~md.needs-coverage-list~2+`]:
+
+....
+needs-list = "Needs:" *WSP reference *("," *WSP reference)
+....
 
 Needs: dsn
 

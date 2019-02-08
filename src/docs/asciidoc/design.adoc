@@ -57,6 +57,10 @@ Covers:
 
 * +req~oft-equivalent.id~1+
 
+---
 
-dsn -> impl, test : +req~oft-equivalent.description~1+
+The remainder of this section lists forwarding specification items that do not require further design"
 
+dsn -> impl, test: +req~oft-equivalent.description~1+
+
+dsn -> impl, test: +req~oft-equivalent.needs~1+

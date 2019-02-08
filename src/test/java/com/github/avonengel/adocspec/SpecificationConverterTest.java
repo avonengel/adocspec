@@ -186,6 +186,7 @@ class SpecificationConverterTest {
             assertThat(output).extracting(SpecificationItem::getDescription).containsOnly(A_DESCRIPTION);
         }
 
+        // [test->dsn~oft-equivalent.needs~1]
         @Test
         @DisplayName("When a paragraph that starts with 'Needs:', then the spec's needs are set")
         void whenParagraphStartsWithNeedsThenNeedsIsSet() {

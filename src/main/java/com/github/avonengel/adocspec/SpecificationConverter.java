@@ -126,6 +126,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
                 final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
                 final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
+                // [impl->dsn~oft-equivalent.needs~1]
                 if (needsMatcher.matches()) {
                     for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
                         specListBuilder.addNeededArtifactType(artifactType);

@@ -147,6 +147,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             }
         } else if (node instanceof List) {
             List list = (List) node;
+            // [impl->dsn~oft-equivalent.covers~1]
             if (state == State.COVERS) {
                 for (StructuralNode item : list.getItems()) {
                     if (item instanceof ListItem) {

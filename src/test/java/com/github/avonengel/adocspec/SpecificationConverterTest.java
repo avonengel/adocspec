@@ -240,6 +240,7 @@ class SpecificationConverterTest {
                     .first().asString().isEmpty();
         }
 
+        // [test->dsn~oft-equivalent.covers~1]
         @Test
         @DisplayName("When 'Covers:' is found, then the following list is converted to coverage links")
         void whenCoversThenListIsConvertedToCoverageLinks() {

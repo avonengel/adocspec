@@ -64,3 +64,5 @@ The remainder of this section lists forwarding specification items that do not r
 dsn -> impl, test: +req~oft-equivalent.description~1+
 
 dsn -> impl, test: +req~oft-equivalent.needs~1+
+
+dsn -> impl, test: +req~oft-equivalent.covers~1+

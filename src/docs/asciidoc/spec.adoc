@@ -116,6 +116,34 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+`+req~oft-equivalent.covers~1+`
+
+The covered artifact IDs are specified in AsciiDoc just like in Markdown. Compare
+{oft-design}#markdown-covers-list[`+dsn~md.covers-list~1+`]:
+
+....
+covers-list = covers-header 1*(LINEBREAK covers-line)
+
+covers-header = "Covers:" *WSP
+
+covers-line = *WSP "*" *WSP reference
+....
+
+Only one traced reference per line is supported. Any optional text after the reference is
+ignored if it is separated by at least one whitespace character.
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
+
+TODO:
+
+* covers
+* status
+* rationale
+
 == OFT AsciiDoc Extensions
 
 This section contains ideas for some extensions of the OFT syntax with AsciiDoc elements.

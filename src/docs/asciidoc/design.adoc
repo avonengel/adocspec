@@ -77,3 +77,5 @@ dsn -> impl, test: +req~oft-equivalent.covers~1+
 dsn -> impl, test: +req~oft-equivalent.status~1+
 
 dsn -> impl, test: +req~oft-equivalent.rationale~1+
+
+dsn -> impl, test: +req~oft-equivalent.forwarding_needed_coverage~1+

@@ -123,6 +123,7 @@ class SpecificationConverterTest {
                 .isEmpty();
     }
 
+    // [test->dsn~oft-equivalent.forwarding_needed_coverage~1]
     @Test
     @DisplayName("Coverage may be forwarded")
     void forwardedCoverage() {

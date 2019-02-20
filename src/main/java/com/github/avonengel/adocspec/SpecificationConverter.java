@@ -113,6 +113,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
                 state = State.SPEC;
             } else if (forwardMatcher.matches()) {
+                // [impl->dsn~oft-equivalent.forwarding_needed_coverage~1]
                 specListBuilder.endSpecificationItem();
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setForwards(true);

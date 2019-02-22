@@ -58,6 +58,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
     private State state = State.START;
+    private String lastTitle = null;
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
         super(backend, opts);
@@ -75,6 +76,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         } else if (node instanceof Section) {
             final Section section = (Section) node;
             LOG.info("Processing section {}", section.getTitle());
+            // [impl->dsn~oft-equivalent.specification-item-title~1]
+            lastTitle = section.getTitle();
             section.getBlocks().forEach(StructuralNode::convert);
             specListBuilder.endSpecificationItem();
             state = State.START;
@@ -89,18 +92,11 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             LOG.info("phrase nodename {}", phrase.getNodeName());
             LOG.info("phrase role {}", phrase.getRoles());
 
-            // this might work, right?
-            /*
-             1. convert phrases to whatever the OFT people do with markup in markdown-formatted content
-                this results in more-or-less plaintext that contains no markup artifacts (HTML5 or DocBook tags)
-             2. convert blocks just like the SpecTreeProcessor
-             3. return XMl-representation of the specification items
-             4. idea for later: return java object instead of XML-string, only this write-to-stream thing on request
-             */
             return phrase.getText();
         } else if (node instanceof Block) {
             Block block = (Block) node;
             if("thematic_break".equals(node.getNodeName())) {
+                lastTitle = null; // TODO: refactor so this cannot get lost
                 return null;
             }
             final String convertedBlock = block.getContent().toString();
@@ -112,6 +108,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
                 state = State.SPEC;
+                if (lastTitle != null) {
+                    specListBuilder.setTitle(lastTitle);
+                }
             } else if (forwardMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.forwarding_needed_coverage~1]
                 specListBuilder.endSpecificationItem();
@@ -167,6 +166,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     }
                 }
             }
+            lastTitle = null; // TODO: refactor so this cannot get lost
+        } else {
+            lastTitle = null; // TODO: refactor so this cannot get lost
         }
 
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";

@@ -27,6 +27,7 @@ class SpecificationConverterTest {
     private static final String A_DESCRIPTION = "some text content, to be used as description";
     private static final String A_PARAGRAPH = "some text content, not to be used by spec";
     private static final String A_RATIONALE = "some text content, to be used as rationale";
+    private static final String A_TITLE = "some title";
     private static final String STATUS_DRAFT = "draft";
     private static Asciidoctor asciidoctor;
 
@@ -130,13 +131,13 @@ class SpecificationConverterTest {
         // Arrange
         String forwardingType = "forwardingtype";
         String neededType = "neededtype";
-        String input = forwardingType + " -> " + neededType + " : " +"`+" + A_SPEC_ID + "+`";
+        String input = forwardingType + " -> " + neededType + " : " + "`+" + A_SPEC_ID + "+`";
         SpecificationItem expectedSpec = SpecificationItem.builder()
-                                                          .addCoveredId(A_SPEC_ID)
-                                                          .forwards(true)
-                                                          .addNeedsArtifactType(neededType)
-                                                          .id(forwardingType, A_SPEC_ID.getName(), A_SPEC_ID.getRevision())
-                                                          .build();
+                .addCoveredId(A_SPEC_ID)
+                .forwards(true)
+                .addNeedsArtifactType(neededType)
+                .id(forwardingType, A_SPEC_ID.getName(), A_SPEC_ID.getRevision())
+                .build();
 
         // Act
         final List<SpecificationItem> output = convertToSpecList(input);
@@ -152,7 +153,7 @@ class SpecificationConverterTest {
         String forwardingType = "forwardingtype";
         String neededType = "neededtype";
         String input = "`+" + A_SPEC_ID + "+`\n\n" +
-                forwardingType + " -> " + neededType + " : " +"`+" + A_SPEC_ID + "+`";
+                forwardingType + " -> " + neededType + " : " + "`+" + A_SPEC_ID + "+`";
         SpecificationItemId expectedId = SpecificationItemId.createId(forwardingType, A_SPEC_ID.getName(), A_SPEC_ID.getRevision());
         // Act
         final List<SpecificationItem> output = convertToSpecList(input);
@@ -165,6 +166,23 @@ class SpecificationConverterTest {
     @SuppressWarnings("unchecked")
     private List<SpecificationItem> convertToSpecList(String input) {
         return asciidoctor.convert(input, OptionsBuilder.options().backend("spec"), List.class);
+    }
+
+    // [test->dsn~oft-equivalent.specification-item-title~1]
+    @Test
+    @DisplayName("When a title precedes a specification item's ID, the title is the specification item's title")
+    void whenHeadingPrecedesIdThenShortDescription() {
+        // Arrange
+        String input = "## " + A_TITLE + "\n" +
+                "`+" + A_SPEC_ID + "+`";
+
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).isNotEmpty();
+        assertThat(output).extracting(SpecificationItem::getTitle).first().asString()
+                .isEqualTo(A_TITLE);
     }
 
     @DisplayName("Given a specification item ID")

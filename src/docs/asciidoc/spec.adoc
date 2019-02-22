@@ -204,6 +204,26 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+
+`+req~oft-equivalent.specification-item-title~1+`
+
+If an AsciiDoc _section_ title directly precedes a specification item ID, then the AsciiDoc title is used as title for the specification item.
+
+Rationale:
+
+AsciiDoc titles show up in the outline and are a natural way of defining a requirement title.
+
+Comment:
+
+In AsciiDoc individual blocks may have titles, too. This has no Markdown equivalent, however.
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
+
+
 == OFT AsciiDoc Extensions
 
 This section contains ideas for some extensions of the OFT syntax with AsciiDoc elements.

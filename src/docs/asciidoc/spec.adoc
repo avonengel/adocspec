@@ -172,6 +172,22 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+.Depends
+`+req~oft-equivalent.depends-list~1`
+
+The AsciiDoc Importer supports the following format for links to a different specification item which the current depends on.
+
+....
+depends-list = depends-header 1*(LINEBREAK depends-line)
+
+depends-header = "Depends:" *WSP
+
+depends-line = *WSP "*" *WSP reference
+....
+
+Only one traced reference per line is supported. Any optional text after the reference is ignored if it is separated by at least one whitespace character
+
+
 .Status
 `+req~oft-equivalent.status~1+`
 
@@ -239,6 +255,21 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+****
+The OFT Gradle plugin currently does not support exclusion of "`draft`" items, therefore the
+following spec is disabled.
+****
+
+----
+.Tags
+`+req~oft-equivalent.tags~1+`
+
+The AsciiDoc Importer supports the following format for links to a different specification item which the current depends on.
+
+....
+tag-list = "Tags:" *WSP tagname *("," *WSP tagname)
+....
+----
 
 == OFT AsciiDoc Extensions
 

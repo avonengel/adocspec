@@ -119,6 +119,17 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+.Comment
+`+req~oft-equivalent.comment~1+`
+
+Any paragraph following the keyword "`Comment:`" is appended to the comment of the specification
+item.
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
 
 .Needs
 `+req~oft-equivalent.needs~1+`

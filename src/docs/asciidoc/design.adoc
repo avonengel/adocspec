@@ -66,7 +66,7 @@ Covers:
 
 ---
 
-The remainder of this section lists forwarding specification items that do not require further design
+The remainder of this section lists forwarding specification items that do not require further design.
 
 dsn -> impl, test: +req~oft-equivalent.description~1+
 
@@ -77,6 +77,8 @@ dsn -> impl, test: +req~oft-equivalent.covers~1+
 dsn -> impl, test: +req~oft-equivalent.status~1+
 
 dsn -> impl, test: +req~oft-equivalent.rationale~1+
+
+dsn -> impl, test: +req~oft-equivalent.comment~1+
 
 dsn -> impl, test: +req~oft-equivalent.forwarding_needed_coverage~1+
 

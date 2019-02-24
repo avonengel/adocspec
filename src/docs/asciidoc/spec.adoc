@@ -96,10 +96,10 @@ Covers:
 * +feat~oft-equivalent~1+
 
 .Description
-`+req~oft-equivalent.description~1+`
+`+req~oft-equivalent.description~2+`
 
-Any paragraph inside a specification item that has no special meaning attached via keywords, is added to the
-description of the item.
+Any paragraph inside a specification item that starts with "`Description:`", or has no special
+meaning attached via keywords, is added to the description of the item.
 
 Needs: dsn
 

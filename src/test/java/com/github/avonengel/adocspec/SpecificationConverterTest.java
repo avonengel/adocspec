@@ -27,7 +27,7 @@ class SpecificationConverterTest {
     private static final String A_DESCRIPTION = "some text content, to be used as description";
     private static final String A_PARAGRAPH = "some text content, not to be used by spec";
     private static final String A_RATIONALE = "some text content, to be used as rationale";
-    private static final String A_COMMENT= "some text content, to be used as comment";
+    private static final String A_COMMENT = "some text content, to be used as comment";
     private static final String A_TITLE = "some title";
     private static final String STATUS_DRAFT = "draft";
     private static Asciidoctor asciidoctor;
@@ -190,7 +190,7 @@ class SpecificationConverterTest {
     @Nested
     class GivenID {
 
-        // [test->dsn~oft-equivalent.description~1]
+        // [test->dsn~oft-equivalent.description~2]
         @Test
         @DisplayName("When a paragraph without any markers is found, then the paragraph becomes the spec's description")
         void whenParagraphThenDescription() {
@@ -204,6 +204,43 @@ class SpecificationConverterTest {
             // Assert
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getDescription).containsOnly(A_DESCRIPTION);
+        }
+
+        @Test
+        @DisplayName("When a paragraph starts with 'Description:', then the spec's description is set")
+        void whenParagraphStartsWithDescriptionThenDescriptionIsSet() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    // First have another element than description, in order to distinguish from the default paragraph
+                    "Comment: " + A_COMMENT + "\n\n" +
+                    "Description: " + A_DESCRIPTION;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getDescription)
+                    .containsOnly(A_DESCRIPTION);
+        }
+
+        @Test
+        @DisplayName("When a paragraph follows a 'Description:', then the spec's description is extended")
+        void whenParagraphFollowsDescriptionThenDescriptionIsAppended() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    // First have another element than description, in order to distinguish from the default paragraph
+                    "Comment: " + A_COMMENT + "\n\n" +
+                    "Description: " + A_DESCRIPTION + "\n\n" +
+                    A_DESCRIPTION;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getDescription)
+                    .first().asString().containsSequence(A_DESCRIPTION, A_DESCRIPTION);
         }
 
         // [test->dsn~oft-equivalent.needs~1]

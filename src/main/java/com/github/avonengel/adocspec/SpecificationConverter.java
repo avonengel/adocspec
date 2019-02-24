@@ -34,6 +34,7 @@ import java.util.stream.StreamSupport;
 public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
+    private static final Pattern DESCRIPTION_PATTERN = Pattern.compile(MdPattern.DESCRIPTION.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern RATIONALE_PATTERN = Pattern.compile(MdPattern.RATIONALE.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern COMMENT_PATTERN = Pattern.compile(MdPattern.COMMENT.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern FORWARD_PATTERN = Pattern.compile("(?<forwardingType>[a-zA-Z]+)"
@@ -56,6 +57,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         COVERS,
         RATIONALE,
         COMMENT,
+        DESCRIPTION,
     }
 
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
@@ -97,15 +99,14 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             return phrase.getText();
         } else if (node instanceof Block) {
             Block block = (Block) node;
-            if("thematic_break".equals(node.getNodeName())) {
+            if ("thematic_break".equals(node.getNodeName())) {
                 lastTitle = null; // TODO: refactor so this cannot get lost
                 return null;
             }
             final String convertedBlock = block.getContent().toString();
             Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);
             // [impl->dsn~oft-equivalent.id~1]
-            if (MdPattern.ID.getPattern().matcher(convertedBlock).matches())
-            {
+            if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
                 specListBuilder.endSpecificationItem();
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
@@ -129,6 +130,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 state = State.START;
             } else {
                 final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
+                final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
                 final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
                 final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
                 final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
@@ -138,6 +140,10 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
                         specListBuilder.addNeededArtifactType(artifactType);
                     }
+                } else if (descriptionMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.description~2]
+                    state = State.DESCRIPTION;
+                    specListBuilder.appendDescription(descriptionMatcher.group(1));
                 } else if (commentMatcher.matches()) {
                     // [impl->dsn~oft-equivalent.comment~1]
                     state = State.COMMENT;
@@ -151,8 +157,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 } else if (statusMatcher.matches()) {
                     // [impl->dsn~oft-equivalent.status~1]
                     specListBuilder.setStatus(ItemStatus.parseString(statusMatcher.group(1)));
-                } else if (state == State.SPEC) {
-                    // [impl->dsn~oft-equivalent.description~1]
+                } else if (state == State.SPEC || state == State.DESCRIPTION) {
+                    // [impl->dsn~oft-equivalent.description~2]
                     specListBuilder.appendDescription(convertedBlock);
                 } else if (state == State.COMMENT) {
                     specListBuilder.appendComment(convertedBlock);

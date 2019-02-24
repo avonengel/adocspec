@@ -72,6 +72,7 @@ explained in the following sections.
 As described in <<feat~adocspec-oft-equivalent>>, AdocSpec supports an equivalent of OFT's Markdown syntax in AsciiDoc.
 This section lists the detailed syntax requirements.
 
+.Specification Item ID
 `+req~oft-equivalent.id~1+`
 
 A requirement definition may be started by a paragraph that only contains a specification item ID in OFT syntax (compare
@@ -94,7 +95,7 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
-
+.Description
 `+req~oft-equivalent.description~1+`
 
 Any paragraph inside a specification item that has no special meaning attached via keywords, is added to the
@@ -106,7 +107,7 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
-
+.Rationale
 `+req~oft-equivalent.rationale~1+`
 
 Any paragraph following the keyword "`Rationale:`" is appended to the rationale of the specification
@@ -119,6 +120,7 @@ Covers:
 * +feat~oft-equivalent~1+
 
 
+.Needs
 `+req~oft-equivalent.needs~1+`
 
 The needed coverage types are specified in AsciiDoc just like in Markdown. The keyword "`Needs:`" is
@@ -136,6 +138,7 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+.Covers
 `+req~oft-equivalent.covers~1+`
 
 The covered artifact IDs are specified in AsciiDoc just like in Markdown. Compare
@@ -158,6 +161,7 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+.Status
 `+req~oft-equivalent.status~1+`
 
 The status field of specification item may be set as follows:
@@ -172,6 +176,7 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
+.Forwarding Needed Coverage
 `+req~oft-equivalent.forwarding_needed_coverage~1+`
 
 AdocSpec supports forwarding required coverage from one artifact type to one or more different artifact types using the
@@ -204,7 +209,7 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
-
+.Specification Item Title
 `+req~oft-equivalent.specification-item-title~1+`
 
 If an AsciiDoc _section_ title directly precedes a specification item ID, then the AsciiDoc title is used as title for the specification item.

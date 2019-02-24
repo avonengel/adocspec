@@ -173,7 +173,7 @@ Covers:
 * +feat~oft-equivalent~1+
 
 .Depends
-`+req~oft-equivalent.depends-list~1`
+`+req~oft-equivalent.depends-list~1+`
 
 The AsciiDoc Importer supports the following format for links to a different specification item which the current depends on.
 
@@ -187,6 +187,11 @@ depends-line = *WSP "*" *WSP reference
 
 Only one traced reference per line is supported. Any optional text after the reference is ignored if it is separated by at least one whitespace character
 
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
 
 .Status
 `+req~oft-equivalent.status~1+`
@@ -269,6 +274,12 @@ The AsciiDoc Importer supports the following format for links to a different spe
 ....
 tag-list = "Tags:" *WSP tagname *("," *WSP tagname)
 ....
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
 ----
 
 == OFT AsciiDoc Extensions

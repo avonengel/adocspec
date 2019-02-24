@@ -27,6 +27,7 @@ class SpecificationConverterTest {
     private static final String A_DESCRIPTION = "some text content, to be used as description";
     private static final String A_PARAGRAPH = "some text content, not to be used by spec";
     private static final String A_RATIONALE = "some text content, to be used as rationale";
+    private static final String A_COMMENT= "some text content, to be used as comment";
     private static final String A_TITLE = "some title";
     private static final String STATUS_DRAFT = "draft";
     private static Asciidoctor asciidoctor;
@@ -222,6 +223,45 @@ class SpecificationConverterTest {
                     .first().asList().containsOnly(AN_OTHER_TYPE);
         }
 
+        // [test->dsn~oft-equivalent.comment~1]
+        @Test
+        @DisplayName("When a paragraph that starts with 'Comment:', then the spec's comment is set")
+        void whenParagraphStartsWithCommentThenCommentIsSet() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Comment: " + A_COMMENT;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getComment)
+                    .containsOnly(A_COMMENT);
+            assertThat(output).extracting(SpecificationItem::getDescription)
+                    .first().asString().isEmpty();
+        }
+
+        @Test
+        @DisplayName("When a paragraph follows a comment paragraph, then it is appended to the comment")
+        void whenParagraphFollowsCommentThenCommentIsAppended() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Comment: " + A_COMMENT + "\n\n" +
+                    A_COMMENT;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getComment)
+                    .first().asString().containsSequence(A_COMMENT, A_COMMENT);
+            assertThat(output).extracting(SpecificationItem::getDescription)
+                    .first().asString().isEmpty();
+        }
+
+        // [test->dsn~oft-equivalent.rationale~1]
         @Test
         @DisplayName("When a paragraph that starts with 'Rationale:', then the spec's rationale is set")
         void whenParagraphStartsWithRationaleThenRationaleIsSet() {
@@ -240,7 +280,6 @@ class SpecificationConverterTest {
                     .first().asString().isEmpty();
         }
 
-        // [test->dsn~oft-equivalent.rationale~1]
         @Test
         @DisplayName("When a 'Rationale:' contains multiple lines, then the spec's rationale is set")
         void whenRationaleMultilineThenRationaleIsSet() {

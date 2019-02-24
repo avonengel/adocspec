@@ -35,6 +35,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
     private static final Pattern RATIONALE_PATTERN = Pattern.compile(MdPattern.RATIONALE.getPattern().pattern() + "(.*)", Pattern.DOTALL);
+    private static final Pattern COMMENT_PATTERN = Pattern.compile(MdPattern.COMMENT.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern FORWARD_PATTERN = Pattern.compile("(?<forwardingType>[a-zA-Z]+)"
             + "\\s*"
             + "&#8594;"
@@ -54,6 +55,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         SPEC,
         COVERS,
         RATIONALE,
+        COMMENT,
     }
 
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
@@ -128,6 +130,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             } else {
                 final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
                 final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
+                final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
                 final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
                 final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
                 // [impl->dsn~oft-equivalent.needs~1]
@@ -135,6 +138,10 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
                         specListBuilder.addNeededArtifactType(artifactType);
                     }
+                } else if (commentMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.comment~1]
+                    state = State.COMMENT;
+                    specListBuilder.appendComment(commentMatcher.group(1));
                 } else if (rationaleMatcher.matches()) {
                     // [impl->dsn~oft-equivalent.rationale~1]
                     state = State.RATIONALE;
@@ -147,6 +154,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 } else if (state == State.SPEC) {
                     // [impl->dsn~oft-equivalent.description~1]
                     specListBuilder.appendDescription(convertedBlock);
+                } else if (state == State.COMMENT) {
+                    specListBuilder.appendComment(convertedBlock);
                 } else if (state == State.RATIONALE) {
                     specListBuilder.appendRationale(convertedBlock);
                 }

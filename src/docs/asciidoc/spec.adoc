@@ -260,12 +260,7 @@ Covers:
 
 * +feat~oft-equivalent~1+
 
-****
-The OFT Gradle plugin currently does not support exclusion of "`draft`" items, therefore the
-following spec is disabled.
-****
 
-----
 .Tags
 `+req~oft-equivalent.tags~1+`
 
@@ -280,7 +275,6 @@ Needs: dsn
 Covers:
 
 * +feat~oft-equivalent~1+
-----
 
 == OFT AsciiDoc Extensions
 

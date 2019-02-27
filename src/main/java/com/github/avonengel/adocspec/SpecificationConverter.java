@@ -132,16 +132,22 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 state = State.START;
             } else {
                 final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
+                final Matcher tagsMatcher = MdPattern.TAGS_INT.getPattern().matcher(convertedBlock);
                 final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
                 final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
                 final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
                 final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
                 final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
                 final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
-                // [impl->dsn~oft-equivalent.needs~1]
                 if (needsMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.needs~1]
                     for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
                         specListBuilder.addNeededArtifactType(artifactType);
+                    }
+                } else if (tagsMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.tags~1]
+                    for (final String tag : tagsMatcher.group(1).split(",\\s*")) {
+                        specListBuilder.addTag(tag);
                     }
                 } else if (descriptionMatcher.matches()) {
                     // [impl->dsn~oft-equivalent.description~2]

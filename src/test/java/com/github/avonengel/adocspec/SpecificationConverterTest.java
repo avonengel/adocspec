@@ -260,6 +260,23 @@ class SpecificationConverterTest {
                     .first().asList().containsOnly(AN_OTHER_TYPE);
         }
 
+        // [test->dsn~oft-equivalent.tags~1]
+        @Test
+        @DisplayName("When a paragraph that starts with 'Tags:', then the spec's tags are set")
+        void whenParagraphStartsWithTagsThenTagsIsSet() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Tags: " + AN_OTHER_TYPE;
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getTags)
+                    .first().asList().containsOnly(AN_OTHER_TYPE);
+        }
+
         // [test->dsn~oft-equivalent.comment~1]
         @Test
         @DisplayName("When a paragraph that starts with 'Comment:', then the spec's comment is set")

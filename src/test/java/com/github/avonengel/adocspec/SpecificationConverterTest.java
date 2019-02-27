@@ -373,6 +373,24 @@ class SpecificationConverterTest {
                     .first().asList().containsOnly(AN_OTHER_SPEC_ID);
         }
 
+        // [test->dsn~oft-equivalent.depends-list~1]
+        @Test
+        @DisplayName("When 'Depends:' is found, then the following list is converted to depends on links")
+        void whenDependsThenListIsConvertedToDependsOnLinks() {
+            // Arrange
+            String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                    "Depends: " + "\n\n" +
+                    "* `+" + AN_OTHER_SPEC_ID + "+`";
+
+            // Act
+            final List<SpecificationItem> output = convertToSpecList(input);
+
+            // Assert
+            assertThat(output).isNotEmpty();
+            assertThat(output).extracting(SpecificationItem::getDependOnIds)
+                    .first().asList().containsOnly(AN_OTHER_SPEC_ID);
+        }
+
         // [test->dsn~oft-equivalent.status~1]
         @Test
         @DisplayName("When 'Status:' is found, remainder is used as status")

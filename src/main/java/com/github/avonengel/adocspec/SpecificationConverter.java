@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -58,6 +59,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         RATIONALE,
         COMMENT,
         DESCRIPTION,
+        DEPENDS,
     }
 
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
@@ -134,6 +136,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
                 final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
                 final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
+                final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
                 final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
                 // [impl->dsn~oft-equivalent.needs~1]
                 if (needsMatcher.matches()) {
@@ -154,6 +157,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     specListBuilder.appendRationale(rationaleMatcher.group(1));
                 } else if (coversMatcher.matches()) {
                     state = State.COVERS;
+                } else if (dependsMatcher.matches()) {
+                    state = State.DEPENDS;
                 } else if (statusMatcher.matches()) {
                     // [impl->dsn~oft-equivalent.status~1]
                     specListBuilder.setStatus(ItemStatus.parseString(statusMatcher.group(1)));
@@ -168,18 +173,13 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             }
         } else if (node instanceof List) {
             List list = (List) node;
-            // [impl->dsn~oft-equivalent.covers~1]
             if (state == State.COVERS) {
-                for (StructuralNode item : list.getItems()) {
-                    if (item instanceof ListItem) {
-                        ListItem listItem = (ListItem) item;
-                        String itemContent = listItem.getText();
-                        final Matcher idMatcher = SpecificationItemId.ID_PATTERN.matcher(itemContent);
-                        if (idMatcher.matches()) {
-                            specListBuilder.addCoveredId(SpecificationItemId.parseId(itemContent));
-                        }
-                    }
-                }
+                // [impl->dsn~oft-equivalent.covers~1]
+                final Consumer<SpecificationItemId> idConsumer = specListBuilder::addCoveredId;
+                readSpecificationItemIdList(list, idConsumer);
+            } else if (state == State.DEPENDS) {
+                // [impl->dsn~oft-equivalent.depends-list~1]
+                readSpecificationItemIdList(list, specListBuilder::addDependsOnId);
             }
             lastTitle = null; // TODO: refactor so this cannot get lost
         } else {
@@ -187,6 +187,19 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         }
 
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";
+    }
+
+    private void readSpecificationItemIdList(List list, Consumer<SpecificationItemId> idConsumer) {
+        for (StructuralNode item : list.getItems()) {
+            if (item instanceof ListItem) {
+                ListItem listItem = (ListItem) item;
+                String itemContent = listItem.getText();
+                final Matcher idMatcher = SpecificationItemId.ID_PATTERN.matcher(itemContent);
+                if (idMatcher.matches()) {
+                    idConsumer.accept(SpecificationItemId.parseId(itemContent));
+                }
+            }
+        }
     }
 
     private void logConvertCall(ContentNode node, String transform, Map<Object, Object> opts) {

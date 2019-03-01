@@ -11,14 +11,14 @@ repositories {
 version = '0.1.0-SNAPSHOT'
 
 asciidoctorj {
-    version = '1.6.0'
+    version = '1.6.2'
 }
 configurations.asciidoctor.extendsFrom configurations.implementation
 dependencies {
     asciidoctor sourceSets.main.output
     asciidoctor 'ch.qos.logback:logback-classic:1.2.3'
 
-    implementation 'org.asciidoctor:asciidoctorj:1.6.0-RC.2'
+    implementation 'org.asciidoctor:asciidoctorj:1.6.2'
     implementation 'org.itsallcode:openfasttrace:2.2.0'
     implementation 'org.slf4j:slf4j-api:1.7.25'
 

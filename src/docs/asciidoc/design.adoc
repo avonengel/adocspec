@@ -64,6 +64,19 @@ Covers:
 
 * +req~oft-equivalent.id~1+
 
+
+`+dsn~oft-equivalent.source-file-line~1+`
+
+To make source file and line information available to the `SpecificationConverter`, a
+link:https://asciidoctor.org/docs/asciidoctorj/#preprocessor[Preprocessor] is used to force setting the sourcemap
+attribute.
+
+Needs: impl, test
+
+Covers:
+
+* +req~oft-equivalent.source-file-line~1+
+
 ---
 
 The remainder of this section lists forwarding specification items that do not require further design.

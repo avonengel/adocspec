@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -51,6 +53,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             + "\\s*(?<coveredId>"
             + SpecificationItemId.ID_PATTERN
             + ")");
+    private static final String STDIN = "<stdin>";
 
     private enum State {
         START,
@@ -112,6 +115,16 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 specListBuilder.endSpecificationItem();
                 specListBuilder.beginSpecificationItem();
                 specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
+                // [impl->dsn~oft-equivalent.source-file-line~1]
+                final Cursor sourceLocation = block.getSourceLocation();
+                String fileLocation;
+                if (!STDIN.equals(sourceLocation.getPath())) {
+                    final Path fullPath = Paths.get(sourceLocation.getDir(), sourceLocation.getPath());
+                    fileLocation = fullPath.toAbsolutePath().toString();
+                } else {
+                    fileLocation = sourceLocation.getPath();
+                }
+                specListBuilder.setLocation(fileLocation, sourceLocation.getLineNumber());
                 state = State.SPEC;
                 if (lastTitle != null) {
                     specListBuilder.setTitle(lastTitle);

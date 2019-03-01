@@ -23,7 +23,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.25'
 
     // Use JUnit test framework
-    testImplementation enforcedPlatform('org.junit:junit-bom:5.3.2')
+    testImplementation enforcedPlatform('org.junit:junit-bom:5.4.0')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.assertj:assertj-core:3.11.1'

@@ -2,7 +2,10 @@ package com.github.avonengel.adocspec;
 
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.OptionsBuilder;
+import org.itsallcode.openfasttrace.ImportSettings;
+import org.itsallcode.openfasttrace.Oft;
 import org.itsallcode.openfasttrace.core.ItemStatus;
+import org.itsallcode.openfasttrace.core.Location;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,7 +13,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.asciidoctor.Asciidoctor.Factory.create;
@@ -41,6 +48,7 @@ class SpecificationConverterTest {
     void prepareSpecProcessor() {
         asciidoctor.unregisterAllExtensions();
         asciidoctor.javaConverterRegistry().register(SpecificationConverter.class, "spec");
+        asciidoctor.javaExtensionRegistry().preprocessor(SourcemapPreprocessor.class);
     }
 
     // [test->dsn~oft-equivalent.id~1]
@@ -56,6 +64,47 @@ class SpecificationConverterTest {
         // Assert
         assertThat(output).isNotEmpty();
         assertThat(output).extracting(SpecificationItem::getId).containsOnly(A_SPEC_ID);
+    }
+
+    // [test->dsn~oft-equivalent.source-file-line~1]
+    @Test
+    @DisplayName("When a Spec is created, then source file and line are set")
+    void whenSpecIsCreatedThenSourceFileLine() {
+        // Arrange
+        String input = "\n\n\n" +
+                "`+" + A_SPEC_ID + "+`";
+
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).isNotEmpty();
+        assertThat(output).extracting(SpecificationItem::getId).containsOnly(A_SPEC_ID);
+        assertThat(output).first().extracting(SpecificationItem::getLocation)
+                .isEqualTo(Location.builder().path("<stdin>").line(4).build());
+    }
+
+    @Test
+    @DisplayName("When a Spec is created, then source file and line are set")
+    @SuppressWarnings("unchecked")
+    void whenSpecIsCreatedThenSourceFileLine(@TempDir Path sourceDirectory) throws IOException {
+        // Arrange
+        final Path sourceFile = sourceDirectory.resolve("source.adoc");
+        String input = "`+" + A_SPEC_ID + "+`";
+        Files.write(sourceFile, input.getBytes());
+
+        // Act
+        asciidoctor.convertFile(sourceFile.toFile(), OptionsBuilder.options().backend("spec"), List.class);
+        // when converting to file, AsciiDoctorJ returns null
+        Path outputFile = sourceDirectory.resolve("source.xml");
+        final ImportSettings settings = ImportSettings.builder().addInputs(sourceDirectory).build();
+        final List<SpecificationItem> result = Oft.create().importItems(settings);
+
+        // Assert
+        assertThat(result).isNotEmpty();
+        assertThat(result).extracting(SpecificationItem::getId).containsOnly(A_SPEC_ID);
+        assertThat(result).first().extracting(SpecificationItem::getLocation)
+                .isEqualTo(Location.builder().path(sourceFile.toAbsolutePath().toString()).line(1).build());
     }
 
     // [test->dsn~oft-equivalent.id~1]

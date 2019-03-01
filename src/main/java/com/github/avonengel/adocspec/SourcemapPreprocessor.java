@@ -6,6 +6,7 @@ import org.asciidoctor.extension.PreprocessorReader;
 
 import java.util.Map;
 
+// [impl->dsn~oft-equivalent.source-file-line~1]
 public class SourcemapPreprocessor extends Preprocessor {
     public SourcemapPreprocessor(Map<String, Object> config) {
         super(config);

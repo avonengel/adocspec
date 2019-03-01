@@ -264,11 +264,22 @@ Covers:
 .Tags
 `+req~oft-equivalent.tags~1+`
 
-The AsciiDoc Importer supports the following format for links to a different specification item which the current depends on.
+AodcSpec supports the following format for links to a different specification item which the current depends on.
 
 ....
 tag-list = "Tags:" *WSP tagname *("," *WSP tagname)
 ....
+
+Needs: dsn
+
+Covers:
+
+* +feat~oft-equivalent~1+
+
+.Source File and Line
+`+req~oft-equivalent.source-file-line~1+`
+
+AdocSpec sets a specification object's source file and line information.
 
 Needs: dsn
 

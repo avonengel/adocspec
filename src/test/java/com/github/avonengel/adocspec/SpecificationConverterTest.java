@@ -235,6 +235,25 @@ class SpecificationConverterTest {
                 .isEqualTo(A_TITLE);
     }
 
+    @Test
+    @DisplayName("When an ID is inside [example] block, it is not recognized as new item")
+    void whenIdExampleThenNoNewItem() {
+        // Arrange
+        String input = "`+" + A_SPEC_ID + "+`\n\n" +
+                "[example]" + "\n" +
+                "====\n" +
+                "+" + AN_OTHER_SPEC_ID + "+\n" +
+                "====";
+
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).isNotEmpty();
+        assertThat(output).extracting(SpecificationItem::getId)
+                .containsOnly(A_SPEC_ID);
+    }
+
     @DisplayName("Given a specification item ID")
     @Nested
     class GivenID {

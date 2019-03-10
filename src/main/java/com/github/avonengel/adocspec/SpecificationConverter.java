@@ -107,26 +107,26 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 lastTitle = null; // TODO: refactor so this cannot get lost
                 return null;
             }
-            if ("example".equals(block.getNodeName())) {
+            if (block.getBlocks() != null && !block.getBlocks().isEmpty()) {
                 inExample = true;
-            }
-            // ATTENTION: Calling getContent() causes conversion of the block's content
-            final String convertedBlock = block.getContent().toString();
-
-            final Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);
-            final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
-            final Matcher tagsMatcher = MdPattern.TAGS_INT.getPattern().matcher(convertedBlock);
-            final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
-            final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
-            final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
-            final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
-            final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
-            final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
-
-            if (inExample) {
-                appendTextBlock(convertedBlock);
+                block.getBlocks().forEach(StructuralNode::convert);
+                inExample = false;
             } else {
-                if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
+                // FIXME: This is probably where &gt; artifacts stem from - not sure if we can suppress that
+                final String convertedBlock = block.getContent().toString();
+
+                final Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);
+                final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
+                final Matcher tagsMatcher = MdPattern.TAGS_INT.getPattern().matcher(convertedBlock);
+                final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
+                final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
+                final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
+                final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
+                final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
+                final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
+                if (inExample) {
+                    appendTextBlock(convertedBlock);
+                } else if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
                     // [impl->dsn~oft-equivalent.id~1]
                     specListBuilder.endSpecificationItem();
                     specListBuilder.beginSpecificationItem();
@@ -191,9 +191,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 } else {
                     appendTextBlock(convertedBlock);
                 }
-            }
-            if ("example".equals(block.getNodeName())) {
-                inExample = false;
             }
         } else if (node instanceof List) {
             List list = (List) node;

@@ -15,7 +15,6 @@ import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.exporter.specobject.SpecobjectWriterExporterFactory;
 import org.itsallcode.openfasttrace.importer.SpecificationListBuilder;
-import org.itsallcode.openfasttrace.importer.markdown.MarkdownForwardingSpecificationItem;
 import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,6 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class SpecificationConverter extends AbstractConverter<Object> {
 
@@ -109,16 +107,27 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 lastTitle = null; // TODO: refactor so this cannot get lost
                 return null;
             }
-            if ("example".equals(node.getNodeName())) {
+            if ("example".equals(block.getNodeName())) {
                 inExample = true;
             }
+            // ATTENTION: Calling getContent() causes conversion of the block's content
             final String convertedBlock = block.getContent().toString();
 
-            Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);
+            final Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);
+            final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
+            final Matcher tagsMatcher = MdPattern.TAGS_INT.getPattern().matcher(convertedBlock);
+            final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
+            final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
+            final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
+            final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
+            final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
+            final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
-            if (!inExample) {
-                // [impl->dsn~oft-equivalent.id~1]
+            if (inExample) {
+                appendTextBlock(convertedBlock);
+            } else {
                 if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
+                    // [impl->dsn~oft-equivalent.id~1]
                     specListBuilder.endSpecificationItem();
                     specListBuilder.beginSpecificationItem();
                     specListBuilder.setId(SpecificationItemId.parseId(convertedBlock));
@@ -150,55 +159,40 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     }
                     specListBuilder.endSpecificationItem();
                     state = State.START;
-                } else {
-                    final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
-                    final Matcher tagsMatcher = MdPattern.TAGS_INT.getPattern().matcher(convertedBlock);
-                    final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
-                    final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
-                    final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
-                    final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
-                    final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
-                    final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
-                    if (needsMatcher.matches()) {
-                        // [impl->dsn~oft-equivalent.needs~1]
-                        for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
-                            specListBuilder.addNeededArtifactType(artifactType);
-                        }
-                    } else if (tagsMatcher.matches()) {
-                        // [impl->dsn~oft-equivalent.tags~1]
-                        for (final String tag : tagsMatcher.group(1).split(",\\s*")) {
-                            specListBuilder.addTag(tag);
-                        }
-                    } else if (descriptionMatcher.matches()) {
-                        // [impl->dsn~oft-equivalent.description~2]
-                        state = State.DESCRIPTION;
-                        specListBuilder.appendDescription(descriptionMatcher.group(1));
-                    } else if (commentMatcher.matches()) {
-                        // [impl->dsn~oft-equivalent.comment~1]
-                        state = State.COMMENT;
-                        specListBuilder.appendComment(commentMatcher.group(1));
-                    } else if (rationaleMatcher.matches()) {
-                        // [impl->dsn~oft-equivalent.rationale~1]
-                        state = State.RATIONALE;
-                        specListBuilder.appendRationale(rationaleMatcher.group(1));
-                    } else if (coversMatcher.matches()) {
-                        state = State.COVERS;
-                    } else if (dependsMatcher.matches()) {
-                        state = State.DEPENDS;
-                    } else if (statusMatcher.matches()) {
-                        // [impl->dsn~oft-equivalent.status~1]
-                        specListBuilder.setStatus(ItemStatus.parseString(statusMatcher.group(1)));
-                    } else if (state == State.SPEC || state == State.DESCRIPTION) {
-                        // [impl->dsn~oft-equivalent.description~2]
-                        specListBuilder.appendDescription(convertedBlock);
-                    } else if (state == State.COMMENT) {
-                        specListBuilder.appendComment(convertedBlock);
-                    } else if (state == State.RATIONALE) {
-                        specListBuilder.appendRationale(convertedBlock);
+                } else if (needsMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.needs~1]
+                    for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
+                        specListBuilder.addNeededArtifactType(artifactType);
                     }
+                } else if (tagsMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.tags~1]
+                    for (final String tag : tagsMatcher.group(1).split(",\\s*")) {
+                        specListBuilder.addTag(tag);
+                    }
+                } else if (descriptionMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.description~2]
+                    state = State.DESCRIPTION;
+                    specListBuilder.appendDescription(descriptionMatcher.group(1));
+                } else if (commentMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.comment~1]
+                    state = State.COMMENT;
+                    specListBuilder.appendComment(commentMatcher.group(1));
+                } else if (rationaleMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.rationale~1]
+                    state = State.RATIONALE;
+                    specListBuilder.appendRationale(rationaleMatcher.group(1));
+                } else if (coversMatcher.matches()) {
+                    state = State.COVERS;
+                } else if (dependsMatcher.matches()) {
+                    state = State.DEPENDS;
+                } else if (statusMatcher.matches()) {
+                    // [impl->dsn~oft-equivalent.status~1]
+                    specListBuilder.setStatus(ItemStatus.parseString(statusMatcher.group(1)));
+                } else {
+                    appendTextBlock(convertedBlock);
                 }
             }
-            if ("example".equals(node.getNodeName())) {
+            if ("example".equals(block.getNodeName())) {
                 inExample = false;
             }
         } else if (node instanceof List) {
@@ -216,7 +210,19 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             lastTitle = null; // TODO: refactor so this cannot get lost
         }
 
+        // FIXME: This shows up in text fields when [example] is used
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";
+    }
+
+    private void appendTextBlock(String convertedBlock) {
+        if (state == State.SPEC || state == State.DESCRIPTION) {
+            // [impl->dsn~oft-equivalent.description~2]
+            specListBuilder.appendDescription(convertedBlock);
+        } else if (state == State.COMMENT) {
+            specListBuilder.appendComment(convertedBlock);
+        } else if (state == State.RATIONALE) {
+            specListBuilder.appendRationale(convertedBlock);
+        }
     }
 
     private void readSpecificationItemIdList(List list, Consumer<SpecificationItemId> idConsumer) {

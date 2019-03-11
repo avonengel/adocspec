@@ -50,6 +50,13 @@ asciidoctor {
     ]
 }
 
+task oftAdocspec(type: org.asciidoctor.gradle.AsciidoctorTask) {
+    sourceDir = file('src/test/resources/oft')
+    outputDir = new File(project.buildDir, 'oft')
+    separateOutputDirs = false
+    backends = ['html5', 'spec']
+}
+
 requirementTracing {
     inputDirectories = files(asciidoctor.outputDir, 'src')
     reportFormat = 'html'
@@ -73,9 +80,9 @@ javadoc {
     options.addStringOption "-base-dir", "${projectDir}"
     options.addStringOption "-attribute",
             "version=${project.version}," +
-            "gh-url=https://github.com/avonengel/adocspec," +
-            "design=../html5/design.html," +
-            "src-with-package=src/main/java/com/github/avonengel/adocspec"
+                    "gh-url=https://github.com/avonengel/adocspec," +
+                    "design=../html5/design.html," +
+                    "src-with-package=src/main/java/com/github/avonengel/adocspec"
 }
 
 task documentation(dependsOn: [javadoc, asciidoctor]) {

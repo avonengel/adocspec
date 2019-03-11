@@ -252,6 +252,8 @@ class SpecificationConverterTest {
         assertThat(output).isNotEmpty();
         assertThat(output).extracting(SpecificationItem::getId)
                 .containsOnly(A_SPEC_ID);
+        assertThat(output).extracting(SpecificationItem::getDescription)
+                .first().asString().contains(AN_OTHER_SPEC_ID.toString());
     }
 
     @DisplayName("Given a specification item ID")

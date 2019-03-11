@@ -66,7 +66,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
     private State state = State.START;
     private String lastTitle = null;
-    private boolean inExample = false;
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
         super(backend, opts);
@@ -107,7 +106,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 lastTitle = null; // TODO: refactor so this cannot get lost
                 return null;
             }
-            // FIXME: This is probably where &gt; artifacts stem from - not sure if we can suppress that
             final String convertedBlock = block.getContent().toString();
 
             final Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);
@@ -121,10 +119,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
             if (inExample(block)) {
+                return convertedBlock;
+            } else if ("example".equals(block.getNodeName())) {
                 appendTextBlock(convertedBlock);
-                // FIXME: This seems very dirty, but fixes the fall-through return from showing up in the output.
-                // Maybe just return the convertedBlocks here? Then concatenate them at the level of the example block itself?
-                return null;
             } else if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
                 // [impl->dsn~oft-equivalent.id~1]
                 specListBuilder.endSpecificationItem();
@@ -205,7 +202,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             lastTitle = null; // TODO: refactor so this cannot get lost
         }
 
-        // FIXME: This shows up in text fields when [example] is used
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";
     }
 

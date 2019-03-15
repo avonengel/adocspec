@@ -310,7 +310,7 @@ class SpecificationConverterTest {
             // Assert
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getDescription)
-                    .first().asString().containsSequence(A_DESCRIPTION, A_DESCRIPTION);
+                    .first().asString().containsSequence(A_DESCRIPTION, "\n\n", A_DESCRIPTION);
         }
 
         // [test->dsn~oft-equivalent.needs~1]
@@ -380,7 +380,7 @@ class SpecificationConverterTest {
             // Assert
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getComment)
-                    .first().asString().containsSequence(A_COMMENT, A_COMMENT);
+                    .first().asString().containsSequence(A_COMMENT, "\n\n", A_COMMENT);
             assertThat(output).extracting(SpecificationItem::getDescription)
                     .first().asString().isEmpty();
         }
@@ -391,7 +391,8 @@ class SpecificationConverterTest {
         void whenParagraphStartsWithRationaleThenRationaleIsSet() {
             // Arrange
             String input = "`+" + A_SPEC_ID + "+`\n\n" +
-                    "Rationale: " + A_RATIONALE;
+                    "Rationale: \n\n" +
+                    A_RATIONALE;
 
             // Act
             final List<SpecificationItem> output = convertToSpecList(input);
@@ -437,7 +438,7 @@ class SpecificationConverterTest {
             // Assert
             assertThat(output).isNotEmpty();
             assertThat(output).extracting(SpecificationItem::getRationale)
-                    .first().asString().containsSequence(A_RATIONALE, A_RATIONALE);
+                    .first().asString().containsSequence(A_RATIONALE, "\n\n", A_RATIONALE);
             assertThat(output).extracting(SpecificationItem::getDescription)
                     .first().asString().isEmpty();
         }

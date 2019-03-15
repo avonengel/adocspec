@@ -51,6 +51,7 @@ asciidoctor {
 }
 
 task oftAdocspec(type: org.asciidoctor.gradle.AsciidoctorTask) {
+    inputs.files(classes)
     sourceDir = file('src/test/resources/oft')
     outputDir = new File(project.buildDir, 'oft')
     separateOutputDirs = false

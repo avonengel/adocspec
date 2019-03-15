@@ -1,14 +1,6 @@
 package com.github.avonengel.adocspec;
 
-import org.asciidoctor.ast.Block;
-import org.asciidoctor.ast.ContentNode;
-import org.asciidoctor.ast.Cursor;
-import org.asciidoctor.ast.Document;
-import org.asciidoctor.ast.List;
-import org.asciidoctor.ast.ListItem;
-import org.asciidoctor.ast.PhraseNode;
-import org.asciidoctor.ast.Section;
-import org.asciidoctor.ast.StructuralNode;
+import org.asciidoctor.ast.*;
 import org.asciidoctor.converter.AbstractConverter;
 import org.itsallcode.openfasttrace.core.ItemStatus;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
@@ -63,7 +55,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         DEPENDS,
     }
 
-    private final SpecificationListBuilder specListBuilder = SpecificationListBuilder.create();
+    private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
     private State state = State.START;
     private String lastTitle = null;
 
@@ -89,17 +81,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             specListBuilder.endSpecificationItem();
             state = State.START;
         } else if (node instanceof PhraseNode) {
-            final PhraseNode phrase = (PhraseNode) node;
-            LOG.info("phrase target {}", phrase.getTarget());
-            LOG.info("phrase text {}", phrase.getText());
-            LOG.info("phrase context {}", phrase.getContext());
-            LOG.info("phrase reftext {}", phrase.getReftext());
-            LOG.info("phrase type {}", phrase.getType());
-            LOG.info("phrase id {}", phrase.getId());
-            LOG.info("phrase nodename {}", phrase.getNodeName());
-            LOG.info("phrase role {}", phrase.getRoles());
-
-            return phrase.getText();
+            return convertPhrase((PhraseNode) node);
         } else if (node instanceof Block) {
             Block block = (Block) node;
             if ("thematic_break".equals(node.getNodeName())) {
@@ -168,15 +150,15 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             } else if (descriptionMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.description~2]
                 state = State.DESCRIPTION;
-                specListBuilder.appendDescription(descriptionMatcher.group(1));
+                appendTextBlock(descriptionMatcher.group(1));
             } else if (commentMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.comment~1]
                 state = State.COMMENT;
-                specListBuilder.appendComment(commentMatcher.group(1));
+                appendTextBlock(commentMatcher.group(1));
             } else if (rationaleMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.rationale~1]
                 state = State.RATIONALE;
-                specListBuilder.appendRationale(rationaleMatcher.group(1));
+                appendTextBlock(rationaleMatcher.group(1));
             } else if (coversMatcher.matches()) {
                 state = State.COVERS;
             } else if (dependsMatcher.matches()) {
@@ -205,6 +187,19 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";
     }
 
+    private Object convertPhrase(PhraseNode phrase) {
+        LOG.info("phrase target {}", phrase.getTarget());
+        LOG.info("phrase text {}", phrase.getText());
+        LOG.info("phrase context {}", phrase.getContext());
+        LOG.info("phrase reftext {}", phrase.getReftext());
+        LOG.info("phrase type {}", phrase.getType());
+        LOG.info("phrase id {}", phrase.getId());
+        LOG.info("phrase nodename {}", phrase.getNodeName());
+        LOG.info("phrase role {}", phrase.getRoles());
+
+        return phrase.getText();
+    }
+
     private boolean inExample(Block block) {
         ContentNode current = block.getParent();
         while (current != null) {
@@ -217,6 +212,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     }
 
     private void appendTextBlock(String convertedBlock) {
+        if (convertedBlock.trim().isEmpty()) {
+            return;
+        }
         if (state == State.SPEC || state == State.DESCRIPTION) {
             // [impl->dsn~oft-equivalent.description~2]
             specListBuilder.appendDescription(convertedBlock);

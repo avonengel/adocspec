@@ -66,6 +66,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     {
         pipeFilters.add(new DocumentPipeFilter());
         pipeFilters.add(new SectionPipeFilter());
+        pipeFilters.add(new PhraseConverter());
     }
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
@@ -82,9 +83,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 return result;
             }
         }
-        if (node instanceof PhraseNode) {
-            return convertPhrase((PhraseNode) node);
-        } else if (node instanceof Block) {
+        if (node instanceof Block) {
             Block block = (Block) node;
             if ("thematic_break".equals(node.getNodeName())) {
                 context.removeLastTitle(); // TODO: refactor so this cannot get lost
@@ -185,19 +184,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         }
 
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";
-    }
-
-    private Object convertPhrase(PhraseNode phrase) {
-        LOG.info("phrase target {}", phrase.getTarget());
-        LOG.info("phrase text {}", phrase.getText());
-        LOG.info("phrase context {}", phrase.getContext());
-        LOG.info("phrase reftext {}", phrase.getReftext());
-        LOG.info("phrase type {}", phrase.getType());
-        LOG.info("phrase id {}", phrase.getId());
-        LOG.info("phrase nodename {}", phrase.getNodeName());
-        LOG.info("phrase role {}", phrase.getRoles());
-
-        return phrase.getText();
     }
 
     private boolean inExample(Block block) {

@@ -18,6 +18,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -45,7 +46,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             + ")");
     private static final String STDIN = "<stdin>";
 
-    private enum State {
+
+    enum State {
         START,
         SPEC,
         COVERS,
@@ -56,8 +58,15 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     }
 
     private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
+    private ConversionContext context = new ConversionContext(specListBuilder);
     private State state = State.START;
     private String lastTitle = null;
+    private java.util.List<NodePipeFilter> pipeFilters = new LinkedList<>();
+
+    {
+        pipeFilters.add(new DocumentPipeFilter());
+        pipeFilters.add(new SectionPipeFilter());
+    }
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
         super(backend, opts);
@@ -67,25 +76,18 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     @Override
     public Object convert(ContentNode node, String transform, Map<Object, Object> opts) {
         logConvertCall(node, transform, opts);
-        if (node instanceof Document) {
-            final Document document = (Document) node;
-            document.getBlocks().forEach(StructuralNode::convert);
-
-            return specListBuilder.build();
-        } else if (node instanceof Section) {
-            final Section section = (Section) node;
-            LOG.info("Processing section {}", section.getTitle());
-            // [impl->dsn~oft-equivalent.specification-item-title~1]
-            lastTitle = section.getTitle();
-            section.getBlocks().forEach(StructuralNode::convert);
-            specListBuilder.endSpecificationItem();
-            state = State.START;
-        } else if (node instanceof PhraseNode) {
+        for (NodePipeFilter pipeFilter : pipeFilters) {
+            Object result = pipeFilter.handleNode(node, context);
+            if (result != null) {
+                return result;
+            }
+        }
+        if (node instanceof PhraseNode) {
             return convertPhrase((PhraseNode) node);
         } else if (node instanceof Block) {
             Block block = (Block) node;
             if ("thematic_break".equals(node.getNodeName())) {
-                lastTitle = null; // TODO: refactor so this cannot get lost
+                context.removeLastTitle(); // TODO: refactor so this cannot get lost
                 return null;
             }
             final String convertedBlock = block.getContent().toString();
@@ -120,9 +122,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 }
                 specListBuilder.setLocation(fileLocation, sourceLocation.getLineNumber());
                 state = State.SPEC;
-                if (lastTitle != null) {
-                    specListBuilder.setTitle(lastTitle);
-                }
+                context.getLastTitle().ifPresent(specListBuilder::setTitle);
             } else if (forwardMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.forwarding_needed_coverage~1]
                 specListBuilder.endSpecificationItem();
@@ -179,9 +179,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 // [impl->dsn~oft-equivalent.depends-list~1]
                 readSpecificationItemIdList(list, specListBuilder::addDependsOnId);
             }
-            lastTitle = null; // TODO: refactor so this cannot get lost
+            context.removeLastTitle(); // TODO: refactor so this cannot get lost
         } else {
-            lastTitle = null; // TODO: refactor so this cannot get lost
+            context.removeLastTitle(); // TODO: refactor so this cannot get lost
         }
 
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";

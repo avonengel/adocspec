@@ -121,6 +121,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 context.setState(State.SPEC);
                 ContentNode parent = block.getParent();
                 if (parent instanceof StructuralNode && ((StructuralNode) parent).getBlocks().indexOf(block) == 0) {
+                    // [impl->dsn~oft-equivalent.specification-item-title~1]
                     specListBuilder.setTitle(((StructuralNode) parent).getTitle());
                 }
             } else if (forwardMatcher.matches()) {

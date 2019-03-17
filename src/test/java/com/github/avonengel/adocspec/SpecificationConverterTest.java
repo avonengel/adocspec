@@ -107,6 +107,35 @@ class SpecificationConverterTest {
                 .isEqualTo(Location.builder().path(sourceFile.toAbsolutePath().toString()).line(1).build());
     }
 
+    @Test
+    void whenSectionEndsThenSpecEnds() {
+        // Arrange
+        String input = "=== How do we Implement the Command Line Interpreter\n" +
+                "\n" +
+                "`+dsn~reflection-based-cli~1+`\n" +
+                "\n" +
+                "OFT got its own simple command line interpreter that uses reflection to\n" +
+                "feed the command line arguments to a receiver object.\n" +
+                "\n" +
+                "Covers:\n" +
+                "\n" +
+                "* `+req~cli.tracing.command~1+`\n" +
+                "* `+req~cli.conversion.command~1+`\n" +
+                "\n" +
+                "==== Why is This Architecture Relevant?\n" +
+                "\n" +
+                "Exchanging the CLI later takes considerable effort.\n";
+
+        // Act
+        final List<SpecificationItem> output = convertToSpecList(input);
+
+        // Assert
+        assertThat(output).isNotEmpty();
+        assertThat(output).hasSize(1);
+        assertThat(output).first().extracting(SpecificationItem::getDescription)
+                .asString().doesNotContain("Exchanging the CLI later takes considerable effort.");
+    }
+
     // [test->dsn~oft-equivalent.id~1]
     @Test
     @DisplayName("When a Spec ID is found inside a section, then a Spec item is created")

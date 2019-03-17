@@ -17,9 +17,11 @@ public class ListPipeFilter implements NodePipeFilter {
             if (context.getState() == SpecificationConverter.State.COVERS) {
                 // [impl->dsn~oft-equivalent.covers~1]
                 readSpecificationItemIdList(list, context.getSpecListBuilder()::addCoveredId);
+                context.setState(SpecificationConverter.State.SPEC);
             } else if (context.getState() == SpecificationConverter.State.DEPENDS) {
                 // [impl->dsn~oft-equivalent.depends-list~1]
                 readSpecificationItemIdList(list, context.getSpecListBuilder()::addDependsOnId);
+                context.setState(SpecificationConverter.State.SPEC);
             }
         }
         return null;

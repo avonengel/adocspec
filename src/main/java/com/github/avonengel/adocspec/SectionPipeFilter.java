@@ -14,7 +14,7 @@ public class SectionPipeFilter implements NodePipeFilter {
         if (node instanceof Section) {
             final Section section = (Section) node;
             LOG.info("Processing section {}", section.getTitle());
-            // [impl->dsn~oft-equivalent.specification-item-title~1]
+            context.getSpecListBuilder().endSpecificationItem();
             section.getBlocks().forEach(StructuralNode::convert);
             context.getSpecListBuilder().endSpecificationItem();
             context.setState(SpecificationConverter.State.START);

@@ -94,7 +94,7 @@ class SpecificationConverterTest {
         Files.write(sourceFile, input.getBytes());
 
         // Act
-        asciidoctor.convertFile(sourceFile.toFile(), OptionsBuilder.options().backend("spec"), List.class);
+        asciidoctor.convertFile(sourceFile.toFile(), OptionsBuilder.options().backend("spec"));
         // when converting to file, AsciiDoctorJ returns null
         Path outputFile = sourceDirectory.resolve("source.xml");
         final ImportSettings settings = ImportSettings.builder().addInputs(sourceDirectory).build();

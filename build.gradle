@@ -25,7 +25,11 @@ dependencies {
     // Use JUnit test framework
     testImplementation enforcedPlatform('org.junit:junit-bom:5.4.0')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testImplementation 'org.apache.commons:commons-lang3:3.8.1'
+
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
 }

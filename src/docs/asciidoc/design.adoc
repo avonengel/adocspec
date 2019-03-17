@@ -77,9 +77,9 @@ Covers:
 
 * +req~oft-equivalent.source-file-line~1+
 
----
+=== Forwarded Specification Items
 
-The remainder of this section lists forwarding specification items that do not require further design.
+This section lists forwarding specification items that do not require further design.
 
 dsn -> impl, test: +req~oft-equivalent.description~2+
 

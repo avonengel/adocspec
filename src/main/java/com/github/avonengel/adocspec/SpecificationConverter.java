@@ -84,9 +84,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         }
         if (node instanceof Block) {
             Block block = (Block) node;
-            if ("thematic_break".equals(node.getNodeName())) {
-                return null;
-            }
             final String convertedBlock = block.getContent().toString();
 
             final Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);

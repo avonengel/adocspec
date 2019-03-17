@@ -65,6 +65,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         pipeFilters.add(new DocumentPipeFilter());
         pipeFilters.add(new SectionPipeFilter());
         pipeFilters.add(new PhraseConverter());
+        pipeFilters.add(new ListPipeFilter());
     }
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
@@ -168,16 +169,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             } else {
                 appendTextBlock(convertedBlock);
             }
-        } else if (node instanceof List) {
-            List list = (List) node;
-            if (context.getState() == State.COVERS) {
-                // [impl->dsn~oft-equivalent.covers~1]
-                final Consumer<SpecificationItemId> idConsumer = specListBuilder::addCoveredId;
-                readSpecificationItemIdList(list, idConsumer);
-            } else if (context.getState() == State.DEPENDS) {
-                // [impl->dsn~oft-equivalent.depends-list~1]
-                readSpecificationItemIdList(list, specListBuilder::addDependsOnId);
-            }
         }
 
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";
@@ -208,18 +199,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         }
     }
 
-    private void readSpecificationItemIdList(List list, Consumer<SpecificationItemId> idConsumer) {
-        for (StructuralNode item : list.getItems()) {
-            if (item instanceof ListItem) {
-                ListItem listItem = (ListItem) item;
-                String itemContent = listItem.getText();
-                final Matcher idMatcher = SpecificationItemId.ID_PATTERN.matcher(itemContent);
-                if (idMatcher.matches()) {
-                    idConsumer.accept(SpecificationItemId.parseId(itemContent));
-                }
-            }
-        }
-    }
 
     private void logConvertCall(ContentNode node, String transform, Map<Object, Object> opts) {
         if (node instanceof StructuralNode) {

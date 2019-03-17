@@ -59,7 +59,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
     private ConversionContext context = new ConversionContext(specListBuilder);
-    private State state = State.START;
     private java.util.List<NodePipeFilter> pipeFilters = new LinkedList<>();
 
     {
@@ -118,9 +117,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     fileLocation = sourceLocation.getPath();
                 }
                 specListBuilder.setLocation(fileLocation, sourceLocation.getLineNumber());
-                state = State.SPEC;
+                context.setState(State.SPEC);
                 ContentNode parent = block.getParent();
-                if(parent instanceof StructuralNode && ((StructuralNode) parent).getBlocks().indexOf(block) == 0) {
+                if (parent instanceof StructuralNode && ((StructuralNode) parent).getBlocks().indexOf(block) == 0) {
                     specListBuilder.setTitle(((StructuralNode) parent).getTitle());
                 }
             } else if (forwardMatcher.matches()) {
@@ -136,7 +135,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                     specListBuilder.addNeededArtifactType(needsType.trim());
                 }
                 specListBuilder.endSpecificationItem();
-                state = State.START;
+                context.setState(State.START);
             } else if (needsMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.needs~1]
                 for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
@@ -149,20 +148,20 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 }
             } else if (descriptionMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.description~2]
-                state = State.DESCRIPTION;
+                context.setState(State.DESCRIPTION);
                 appendTextBlock(descriptionMatcher.group(1));
             } else if (commentMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.comment~1]
-                state = State.COMMENT;
+                context.setState(State.COMMENT);
                 appendTextBlock(commentMatcher.group(1));
             } else if (rationaleMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.rationale~1]
-                state = State.RATIONALE;
+                context.setState(State.RATIONALE);
                 appendTextBlock(rationaleMatcher.group(1));
             } else if (coversMatcher.matches()) {
-                state = State.COVERS;
+                context.setState(State.COVERS);
             } else if (dependsMatcher.matches()) {
-                state = State.DEPENDS;
+                context.setState(State.DEPENDS);
             } else if (statusMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.status~1]
                 specListBuilder.setStatus(ItemStatus.parseString(statusMatcher.group(1)));
@@ -171,11 +170,11 @@ public class SpecificationConverter extends AbstractConverter<Object> {
             }
         } else if (node instanceof List) {
             List list = (List) node;
-            if (state == State.COVERS) {
+            if (context.getState() == State.COVERS) {
                 // [impl->dsn~oft-equivalent.covers~1]
                 final Consumer<SpecificationItemId> idConsumer = specListBuilder::addCoveredId;
                 readSpecificationItemIdList(list, idConsumer);
-            } else if (state == State.DEPENDS) {
+            } else if (context.getState() == State.DEPENDS) {
                 // [impl->dsn~oft-equivalent.depends-list~1]
                 readSpecificationItemIdList(list, specListBuilder::addDependsOnId);
             }
@@ -199,12 +198,12 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         if (convertedBlock.trim().isEmpty()) {
             return;
         }
-        if (state == State.SPEC || state == State.DESCRIPTION) {
+        if (context.getState() == State.SPEC || context.getState() == State.DESCRIPTION) {
             // [impl->dsn~oft-equivalent.description~2]
             specListBuilder.appendDescription(convertedBlock);
-        } else if (state == State.COMMENT) {
+        } else if (context.getState() == State.COMMENT) {
             specListBuilder.appendComment(convertedBlock);
-        } else if (state == State.RATIONALE) {
+        } else if (context.getState() == State.RATIONALE) {
             specListBuilder.appendRationale(convertedBlock);
         }
     }

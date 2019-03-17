@@ -60,7 +60,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
     private ConversionContext context = new ConversionContext(specListBuilder);
     private State state = State.START;
-    private String lastTitle = null;
     private java.util.List<NodePipeFilter> pipeFilters = new LinkedList<>();
 
     {
@@ -86,7 +85,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         if (node instanceof Block) {
             Block block = (Block) node;
             if ("thematic_break".equals(node.getNodeName())) {
-                context.removeLastTitle(); // TODO: refactor so this cannot get lost
                 return null;
             }
             final String convertedBlock = block.getContent().toString();
@@ -121,7 +119,10 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 }
                 specListBuilder.setLocation(fileLocation, sourceLocation.getLineNumber());
                 state = State.SPEC;
-                context.getLastTitle().ifPresent(specListBuilder::setTitle);
+                ContentNode parent = block.getParent();
+                if(parent instanceof StructuralNode && ((StructuralNode) parent).getBlocks().indexOf(block) == 0) {
+                    specListBuilder.setTitle(((StructuralNode) parent).getTitle());
+                }
             } else if (forwardMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.forwarding_needed_coverage~1]
                 specListBuilder.endSpecificationItem();
@@ -178,9 +179,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 // [impl->dsn~oft-equivalent.depends-list~1]
                 readSpecificationItemIdList(list, specListBuilder::addDependsOnId);
             }
-            context.removeLastTitle(); // TODO: refactor so this cannot get lost
-        } else {
-            context.removeLastTitle(); // TODO: refactor so this cannot get lost
         }
 
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";

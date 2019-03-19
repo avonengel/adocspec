@@ -5,7 +5,7 @@ import org.asciidoctor.ast.PhraseNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PhraseConverter implements NodePipeFilter {
+public class PhraseConverter implements NodeHandler {
     private static final Logger LOG = LoggerFactory.getLogger(PhraseConverter.class);
 
     @Override

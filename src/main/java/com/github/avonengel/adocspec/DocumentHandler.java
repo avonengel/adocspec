@@ -4,7 +4,7 @@ import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.StructuralNode;
 
-public class DocumentPipeFilter implements NodePipeFilter {
+public class DocumentHandler implements NodeHandler {
     @Override
     public Object handleNode(ContentNode node, ConversionContext context) {
         if(node instanceof Document) {

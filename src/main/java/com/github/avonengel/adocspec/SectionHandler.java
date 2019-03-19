@@ -6,8 +6,8 @@ import org.asciidoctor.ast.StructuralNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SectionPipeFilter implements NodePipeFilter {
-    private static final Logger LOG = LoggerFactory.getLogger(SectionPipeFilter.class);
+public class SectionHandler implements NodeHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(SectionHandler.class);
 
     @Override
     public Object handleNode(ContentNode node, ConversionContext context) {

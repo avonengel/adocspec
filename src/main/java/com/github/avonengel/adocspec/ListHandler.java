@@ -9,7 +9,7 @@ import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 
-public class ListPipeFilter implements NodePipeFilter {
+public class ListHandler implements NodeHandler {
     @Override
     public Object handleNode(ContentNode node, ConversionContext context) {
         if (node instanceof List) {

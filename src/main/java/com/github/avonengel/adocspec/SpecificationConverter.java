@@ -2,12 +2,9 @@ package com.github.avonengel.adocspec;
 
 import org.asciidoctor.ast.*;
 import org.asciidoctor.converter.AbstractConverter;
-import org.itsallcode.openfasttrace.core.ItemStatus;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
-import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.exporter.specobject.SpecobjectWriterExporterFactory;
 import org.itsallcode.openfasttrace.importer.SpecificationListBuilder;
-import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +13,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class SpecificationConverter extends AbstractConverter<Object> {
@@ -41,14 +33,14 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
     private ConversionContext context = new ConversionContext(specListBuilder);
-    private java.util.List<NodePipeFilter> pipeFilters = new LinkedList<>();
+    private java.util.List<NodeHandler> handlers = new LinkedList<>();
 
     {
-        pipeFilters.add(new DocumentPipeFilter());
-        pipeFilters.add(new SectionPipeFilter());
-        pipeFilters.add(new PhraseConverter());
-        pipeFilters.add(new ListPipeFilter());
-        pipeFilters.add(new BlockConverter());
+        handlers.add(new DocumentHandler());
+        handlers.add(new SectionHandler());
+        handlers.add(new PhraseConverter());
+        handlers.add(new ListHandler());
+        handlers.add(new BlockConverter());
     }
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
@@ -59,7 +51,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     @Override
     public Object convert(ContentNode node, String transform, Map<Object, Object> opts) {
         logConvertCall(node, transform, opts);
-        for (NodePipeFilter pipeFilter : pipeFilters) {
+        for (NodeHandler pipeFilter : handlers) {
             Object result = pipeFilter.handleNode(node, context);
             if (result != null) {
                 return result;

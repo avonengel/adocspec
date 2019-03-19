@@ -21,11 +21,11 @@ not eat away their development time.
 
 Requirement tracing is a recurring and frankly quite boring task best
 performed by a machine instead of a person. Again the chances of getting
-accepted depend on getting this job ``out of the way'' and this means
+accepted depend on getting this job "`out of the way`" and this means
 automating it. OFT therefore aims to offer easy integration into
 existing build processes, independently of the tool chains used.
 
-It looks strange first that ``useful'' needs to be spelled out as a
+It looks strange first that "`useful`" needs to be spelled out as a
 goal. The reason is that the authors felt that existing tracing tools
 are mostly optimized for producing proof that you worked according to
 process - i.e. reports that you can shelve until an quality auditor
@@ -67,7 +67,7 @@ artifact type and the location where OFT found them.
 
 A specification item can also contain information about its
 relationships to other specification items. For more details about those
-relationships check link:#tracing[section ``tracing''].
+relationships check link:#tracing[section "`tracing`"].
 
 ===== Coverage
 
@@ -225,20 +225,20 @@ number.
 The title is a short summary of the specification item, mostly intended
 to appear in overview lists.
 
-The status of the item is one of ``approved'', ``proposed'', ``draft''
-and ``rejected''.
+The status of the item is one of "`approved`", "`proposed`", "`draft`"
+and "`rejected`".
 
 The description contains the normative part of the specification.
 
 The rationale explains the reasoning behind a requirement or decision.
 
-The ``Covers'' section contains a list of all specification item IDs
+The "`Covers`" section contains a list of all specification item IDs
 that are covered by this item.
 
-The ``Depends'' section contains a list of all specification item IDs
+The "`Depends`" section contains a list of all specification item IDs
 that must be implemented in order for this item to be complete.
 
-The ``Needs'' section list all artifact item types in which coverage for
+The "`Needs`" section list all artifact item types in which coverage for
 this item must be provided.
 
 Tags are a way to label an artifact intended for grouping.
@@ -484,9 +484,9 @@ apply
 
 * The specification item has duplicates (i.e. another specification item
 with the same ID exists) _or_
-* The item has any other status than ``rejected'' _and any of_
+* The item has any other status than "`rejected`" _and any of_
 ** At least one outgoing coverage link has a different status than
-``Covers''
+"`Covers`"
 ** The item is not covered deeply
 
 Covers:
@@ -649,7 +649,7 @@ An item summary consist in the plain text report includes
 . Total number of outgoing links
 . Number of duplicates (not including this item)
 . ID
-. Status (unless ``approved'')
+. Status (unless "`approved`")
 . Artifact types indicating coverage
 
 Covers:
@@ -707,7 +707,7 @@ into the format the toolchain expects.
 
 `+req~conversion.reqm2-export~1+`
 
-OFT exports to ReqM2’s ``SpecObject'' format.
+OFT exports to ReqM2’s "`SpecObject`" format.
 
 Covers:
 
@@ -737,7 +737,7 @@ Needs: dsn
 `+req~cli.tracing.output-format~1+`
 
 Users can select one of the following requirement tracing output formats
-(aka. ``report formats''):
+(aka. "`report formats`"):
 
 * Plain text
 
@@ -795,7 +795,7 @@ Needs: dsn
 `+req~cli.conversion.output-format~1+`
 
 Users can select one of the following conversion output formats (aka.
-``export formats''):
+"`export formats`"):
 
 * ReqM2
 

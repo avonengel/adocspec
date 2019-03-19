@@ -679,7 +679,7 @@ Covers:
 
 Needs: impl, utest
 
-===== Markdown ``Covers'' list
+===== Markdown "`Covers`" list
 
 `+dsn~md.covers-list~1+`
 
@@ -711,7 +711,7 @@ Covers:
 
 Needs: impl, utest
 
-===== Markdown ``Depends'' List
+===== Markdown "`Depends`" List
 
 `+dsn~md.depends-list~1+`
 
@@ -743,7 +743,7 @@ Covers:
 
 Needs: impl, utest
 
-===== Markdown Compact ``Needs'' List
+===== Markdown Compact "`Needs`" List
 
 `+dsn~md.needs-coverage-list-compact~1+`
 
@@ -761,7 +761,7 @@ needs-line = *WSP "*" *WSP reference
 
 Rationale:
 
-This alternative style of the ``needs'' list provides backward
+This alternative style of the "`needs`" list provides backward
 compatibility to Elektrobit’s legacy requirement enhanced Markdown
 format.
 
@@ -806,7 +806,7 @@ Needs: impl, utest
 
 ==== Elektrobit Markdown-style Structures
 
-===== Markdown ``Needs'' List
+===== Markdown "`Needs`" List
 
 `+dsn~md.needs-coverage-list~2+`
 
@@ -932,7 +932,7 @@ The CLI accepts the following two variants for defining input files:
 * A list of files
 * A list of directories
 
-In both cases relative and absolute paths are accepted. ``Relative''
+In both cases relative and absolute paths are accepted. "`Relative`"
 means in relation to the current working directory.
 
 Covers:

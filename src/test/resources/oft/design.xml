@@ -105,7 +105,7 @@ needs-list = needs-header 1*(LINEBREAK depends-line)
 
 needs-header = "Needs:" *WSP
 
-needs-line = *WSP "*" *WSP reference</description><rationale>This alternative style of the ``needs'' list provides backward
+needs-line = *WSP "*" *WSP reference</description><rationale>This alternative style of the needs list provides backward
 compatibility to Elektrobit’s legacy requirement enhanced Markdown
 format.</rationale><needscoverage><needsobj>impl</needsobj><needsobj>utest</needsobj></needscoverage><providescoverage><provcov><linksto>req:markdown-standard-syntax</linksto><dstversion>1</dstversion></provcov></providescoverage></specobject><specobject><id>md.artifact-forwarding-notation</id><status>approved</status><version>1</version><sourcefile>C:\dev\adocspec\src\test\resources\oft\design.adoc</sourcefile><sourceline>776</sourceline><description>The Markdown Importer supports forwarding required coverage from one
 artifact type to one or more different artifact types using the
@@ -148,7 +148,7 @@ line parameter:
 
 command = "trace" / "convert"</description><needscoverage><needsobj>impl</needsobj><needsobj>itest</needsobj></needscoverage><providescoverage><provcov><linksto>req:cli.tracing.command</linksto><dstversion>1</dstversion></provcov><provcov><linksto>req:cli.conversion.command</linksto><dstversion>1</dstversion></provcov></providescoverage></specobject><specobject><id>cli.input-file-selection</id><status>approved</status><version>1</version><sourcefile>C:\dev\adocspec\src\test\resources\oft\design.adoc</sourcefile><sourceline>928</sourceline><description>The CLI accepts the following two variants for defining input files:
 
-In both cases relative and absolute paths are accepted. ``Relative''
+In both cases relative and absolute paths are accepted. Relative
 means in relation to the current working directory.</description><needscoverage><needsobj>impl</needsobj><needsobj>itest</needsobj></needscoverage><providescoverage><provcov><linksto>req:cli.input-selection</linksto><dstversion>1</dstversion></provcov></providescoverage></specobject><specobject><id>input-directory-recursive-traversal</id><status>approved</status><version>1</version><sourcefile>C:\dev\adocspec\src\test\resources\oft\design.adoc</sourcefile><sourceline>946</sourceline><description>The Importer reads all requirement input files from all input
 directories recursively.</description><needscoverage><needsobj>impl</needsobj><needsobj>itest</needsobj></needscoverage><providescoverage><provcov><linksto>req:cli.input-directory-selection</linksto><dstversion>1</dstversion></provcov></providescoverage></specobject><specobject><id>cli.default-input</id><status>approved</status><version>1</version><sourcefile>C:\dev\adocspec\src\test\resources\oft\design.adoc</sourcefile><sourceline>959</sourceline><description>If the user does not specify any inputs as CLI parameters, the CLI uses
 the current working directory as default input.</description><needscoverage><needsobj>impl</needsobj><needsobj>itest</needsobj></needscoverage><providescoverage><provcov><linksto>req:cli.default-input</linksto><dstversion>1</dstversion></provcov></providescoverage></specobject><specobject><id>newline-format</id><status>approved</status><version>1</version><sourcefile>C:\dev\adocspec\src\test\resources\oft\design.adoc</sourcefile><sourceline>972</sourceline><description>The CLI accepts one of the following newline formats:

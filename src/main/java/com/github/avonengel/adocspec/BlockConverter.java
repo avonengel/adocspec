@@ -48,11 +48,7 @@ public class BlockConverter implements NodeHandler {
             final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
-            if (inExample(block)) {
-                return convertedBlock;
-            } else if ("example".equals(block.getNodeName())) {
-                appendTextBlock(convertedBlock, context);
-            } else if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
+            if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
                 // [impl->dsn~oft-equivalent.id~1]
                 context.getSpecListBuilder().endSpecificationItem();
                 context.getSpecListBuilder().beginSpecificationItem();
@@ -121,18 +117,6 @@ public class BlockConverter implements NodeHandler {
             }
         }
         return null;
-    }
-
-
-    private boolean inExample(Block block) {
-        ContentNode current = block.getParent();
-        while (current != null) {
-            if ("example".equals(current.getNodeName())) {
-                return true;
-            }
-            current = current.getParent();
-        }
-        return false;
     }
 
     private void appendTextBlock(String convertedBlock, ConversionContext context) {

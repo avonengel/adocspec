@@ -40,6 +40,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         handlers.add(new SectionHandler());
         handlers.add(new PhraseConverter());
         handlers.add(new ListHandler());
+        handlers.add(new BlockHandler(
+                new ExampleHandler()
+        ));
         handlers.add(new BlockConverter());
     }
 
@@ -51,8 +54,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     @Override
     public Object convert(ContentNode node, String transform, Map<Object, Object> opts) {
         logConvertCall(node, transform, opts);
-        for (NodeHandler pipeFilter : handlers) {
-            Object result = pipeFilter.handleNode(node, context);
+        for (NodeHandler handler : handlers) {
+            Object result = handler.handleNode(node, context);
             if (result != null) {
                 return result;
             }

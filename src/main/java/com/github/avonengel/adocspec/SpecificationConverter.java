@@ -17,6 +17,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class SpecificationConverter extends AbstractConverter<Object> {
@@ -32,7 +33,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         handlers.add(new PhraseConverter());
         handlers.add(new ListHandler());
         handlers.add(new BlockHandler(
-                new ExampleHandler()
+                new ExampleHandler(),
+                new SpecificationItemIdHandler()
         ));
         handlers.add(new BlockConverter());
     }
@@ -46,9 +48,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     public Object convert(ContentNode node, String transform, Map<Object, Object> opts) {
         logConvertCall(node, transform, opts);
         for (NodeHandler handler : handlers) {
-            Object result = handler.handleNode(node, context);
+            Optional<Object> result = handler.handleNode(node, context);
             if (result != null) {
-                return result;
+                return result.orElse(null);
             }
         }
 

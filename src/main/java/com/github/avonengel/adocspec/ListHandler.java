@@ -6,12 +6,13 @@ import org.asciidoctor.ast.ListItem;
 import org.asciidoctor.ast.StructuralNode;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 
 public class ListHandler implements NodeHandler {
     @Override
-    public Object handleNode(ContentNode node, ConversionContext context) {
+    public Optional<Object> handleNode(ContentNode node, ConversionContext context) {
         if (node instanceof List) {
             List list = (List) node;
             if (context.getState() == SpecificationConverter.State.COVERS) {
@@ -23,6 +24,7 @@ public class ListHandler implements NodeHandler {
                 readSpecificationItemIdList(list, context.getSpecListBuilder()::addDependsOnId);
                 context.setState(SpecificationConverter.State.SPEC);
             }
+            return Optional.empty();
         }
         return null;
     }

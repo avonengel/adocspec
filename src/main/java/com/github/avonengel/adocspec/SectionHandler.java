@@ -6,11 +6,13 @@ import org.asciidoctor.ast.StructuralNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 public class SectionHandler implements NodeHandler {
     private static final Logger LOG = LoggerFactory.getLogger(SectionHandler.class);
 
     @Override
-    public Object handleNode(ContentNode node, ConversionContext context) {
+    public Optional<Object> handleNode(ContentNode node, ConversionContext context) {
         if (node instanceof Section) {
             final Section section = (Section) node;
             LOG.info("Processing section {}", section.getTitle());
@@ -18,6 +20,7 @@ public class SectionHandler implements NodeHandler {
             section.getBlocks().forEach(StructuralNode::convert);
             context.getSpecListBuilder().endSpecificationItem();
             context.setState(SpecificationConverter.State.START);
+            return Optional.empty();
         }
         return null;
     }

@@ -1,17 +1,20 @@
 package com.github.avonengel.adocspec;
 
+import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.ContentNode;
 
-public class ExampleHandler implements NodeContentHandler {
+import java.util.Optional;
+
+public class ExampleHandler implements BlockContentHandler {
     @Override
-    public Object handleNode(ContentNode node, String content, ConversionContext context) {
-        if (inExample(node)) {
-            return content;
-        } else if ("example".equals(node.getNodeName())) {
+    public Optional<Object> handleNode(Block block, String content, ConversionContext context) {
+        if (inExample(block)) {
+            return Optional.of(content);
+        } else if ("example".equals(block.getNodeName())) {
             appendTextBlock(content, context);
             // how to signal to the caller that this block has been handled
             // and no further handlers should be called?
-            return "";
+            return Optional.empty();
         }
         return null;
     }

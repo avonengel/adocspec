@@ -5,11 +5,13 @@ import org.asciidoctor.ast.PhraseNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 public class PhraseConverter implements NodeHandler {
     private static final Logger LOG = LoggerFactory.getLogger(PhraseConverter.class);
 
     @Override
-    public Object handleNode(ContentNode node, ConversionContext context) {
+    public Optional<Object> handleNode(ContentNode node, ConversionContext context) {
         if (node instanceof PhraseNode) {
             PhraseNode phrase = (PhraseNode) node;
             LOG.info("phrase target {}", phrase.getTarget());
@@ -21,7 +23,7 @@ public class PhraseConverter implements NodeHandler {
             LOG.info("phrase nodename {}", phrase.getNodeName());
             LOG.info("phrase role {}", phrase.getRoles());
 
-            return phrase.getText();
+            return Optional.of(phrase.getText());
         }
         return null;
     }

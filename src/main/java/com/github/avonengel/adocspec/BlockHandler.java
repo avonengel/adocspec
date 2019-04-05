@@ -5,21 +5,22 @@ import org.asciidoctor.ast.ContentNode;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class BlockHandler implements NodeHandler {
-    private List<NodeContentHandler> nodeContentHandlers;
+    private List<BlockContentHandler> blockContentHandlers;
 
-    public BlockHandler(NodeContentHandler... nodeContentHandlers) {
-        this.nodeContentHandlers = Arrays.asList(nodeContentHandlers);
+    public BlockHandler(BlockContentHandler... blockContentHandlers) {
+        this.blockContentHandlers = Arrays.asList(blockContentHandlers);
     }
 
     @Override
-    public Object handleNode(ContentNode node, ConversionContext context) {
+    public Optional<Object> handleNode(ContentNode node, ConversionContext context) {
         if (node instanceof Block) {
             Block block = (Block) node;
             final String content = block.getContent().toString();
-            for (NodeContentHandler contentHandler : nodeContentHandlers) {
-                final Object result = contentHandler.handleNode(node, content, context);
+            for (BlockContentHandler contentHandler : blockContentHandlers) {
+                final Optional<Object> result = contentHandler.handleNode(block, content, context);
                 if (result != null) {
                     return result;
                 }

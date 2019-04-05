@@ -9,9 +9,9 @@ import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 
-public class ListHandler implements NodeHandler {
+public class ListHandler implements NodeHandler<Void> {
     @Override
-    public Object handleNode(ContentNode node, ConversionContext context) {
+    public NodeResult<Void> handleNode(ContentNode node, ConversionContext context) {
         if (node instanceof List) {
             List list = (List) node;
             if (context.getState() == SpecificationConverter.State.COVERS) {
@@ -23,8 +23,9 @@ public class ListHandler implements NodeHandler {
                 readSpecificationItemIdList(list, context.getSpecListBuilder()::addDependsOnId);
                 context.setState(SpecificationConverter.State.SPEC);
             }
+            NodeResult.continueHandlers();
         }
-        return null;
+        return NodeResult.continueHandlers();
     }
 
     private void readSpecificationItemIdList(List list, Consumer<SpecificationItemId> idConsumer) {

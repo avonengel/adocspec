@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BlockConverter implements NodeHandler {
+public class BlockConverter implements NodeHandler<Object> {
     private static final Pattern DESCRIPTION_PATTERN = Pattern.compile(MdPattern.DESCRIPTION.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern RATIONALE_PATTERN = Pattern.compile(MdPattern.RATIONALE.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern COMMENT_PATTERN = Pattern.compile(MdPattern.COMMENT.getPattern().pattern() + "(.*)", Pattern.DOTALL);
@@ -30,10 +30,9 @@ public class BlockConverter implements NodeHandler {
             + "\\s*(?<coveredId>"
             + SpecificationItemId.ID_PATTERN
             + ")");
-    private static final String STDIN = "<stdin>";
 
     @Override
-    public Object handleNode(ContentNode node, ConversionContext context) {
+    public NodeResult<Object> handleNode(ContentNode node, ConversionContext context) {
         if (node instanceof Block) {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
@@ -48,28 +47,7 @@ public class BlockConverter implements NodeHandler {
             final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
-            if (MdPattern.ID.getPattern().matcher(convertedBlock).matches()) {
-                // [impl->dsn~oft-equivalent.id~1]
-                context.getSpecListBuilder().endSpecificationItem();
-                context.getSpecListBuilder().beginSpecificationItem();
-                context.getSpecListBuilder().setId(SpecificationItemId.parseId(convertedBlock));
-                // [impl->dsn~oft-equivalent.source-file-line~1]
-                final Cursor sourceLocation = block.getSourceLocation();
-                String fileLocation;
-                if (!STDIN.equals(sourceLocation.getPath())) {
-                    final Path fullPath = Paths.get(sourceLocation.getDir(), sourceLocation.getPath());
-                    fileLocation = fullPath.toAbsolutePath().toString();
-                } else {
-                    fileLocation = sourceLocation.getPath();
-                }
-                context.getSpecListBuilder().setLocation(fileLocation, sourceLocation.getLineNumber());
-                context.setState(SpecificationConverter.State.SPEC);
-                ContentNode parent = block.getParent();
-                if (parent instanceof StructuralNode && ((StructuralNode) parent).getBlocks().indexOf(block) == 0) {
-                    // [impl->dsn~oft-equivalent.specification-item-title~1]
-                    context.getSpecListBuilder().setTitle(((StructuralNode) parent).getTitle());
-                }
-            } else if (forwardMatcher.matches()) {
+            if (forwardMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.forwarding_needed_coverage~1]
                 context.getSpecListBuilder().endSpecificationItem();
                 context.getSpecListBuilder().beginSpecificationItem();
@@ -116,7 +94,7 @@ public class BlockConverter implements NodeHandler {
                 appendTextBlock(convertedBlock, context);
             }
         }
-        return null;
+        return NodeResult.continueHandlers();
     }
 
     private void appendTextBlock(String convertedBlock, ConversionContext context) {

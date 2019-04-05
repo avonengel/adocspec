@@ -2,8 +2,8 @@ package com.github.avonengel.adocspec;
 
 import org.asciidoctor.ast.ContentNode;
 
-public interface NodeContentHandler {
-    public Object handleNode(ContentNode node, String content, ConversionContext context);
+public interface NodeContentHandler<T> {
+    public NodeResult<T> handleNode(ContentNode node, String content, ConversionContext context);
 
     default void appendTextBlock(String content, ConversionContext context) {
         if (content.trim().isEmpty()) {

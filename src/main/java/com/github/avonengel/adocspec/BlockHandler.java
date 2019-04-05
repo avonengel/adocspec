@@ -14,13 +14,13 @@ public class BlockHandler implements NodeHandler {
     }
 
     @Override
-    public Object handleNode(ContentNode node, ConversionContext context) {
+    public NodeResult handleNode(ContentNode node, ConversionContext context) {
         if (node instanceof Block) {
             Block block = (Block) node;
             final String content = block.getContent().toString();
             for (NodeContentHandler contentHandler : nodeContentHandlers) {
-                final Object result = contentHandler.handleNode(node, content, context);
-                if (result != null) {
+                final NodeResult<?> result = contentHandler.handleNode(node, content, context);
+                if (result != null && !result.shouldContinue()) {
                     return result;
                 }
             }

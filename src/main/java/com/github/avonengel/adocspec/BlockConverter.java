@@ -18,19 +18,6 @@ public class BlockConverter implements NodeHandler {
     private static final Pattern DESCRIPTION_PATTERN = Pattern.compile(MdPattern.DESCRIPTION.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern RATIONALE_PATTERN = Pattern.compile(MdPattern.RATIONALE.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern COMMENT_PATTERN = Pattern.compile(MdPattern.COMMENT.getPattern().pattern() + "(.*)", Pattern.DOTALL);
-    private static final Pattern FORWARD_PATTERN = Pattern.compile("(?<forwardingType>[a-zA-Z]+)"
-            + "\\s*"
-            + "&#8594;"
-            + "\\s*"
-            + "(?<needsList>[a-zA-Z]+"
-            + "(?:,\\s*"
-            + "[a-zA-Z]+"
-            + ")*)"
-            + "\\s*"
-            + ":"
-            + "\\s*(?<coveredId>"
-            + SpecificationItemId.ID_PATTERN
-            + ")");
 
     @Override
     public Optional<Object> handleNode(ContentNode node, ConversionContext context) {
@@ -38,7 +25,6 @@ public class BlockConverter implements NodeHandler {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
 
-            final Matcher forwardMatcher = FORWARD_PATTERN.matcher(convertedBlock);
             final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
             final Matcher tagsMatcher = MdPattern.TAGS_INT.getPattern().matcher(convertedBlock);
             final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
@@ -48,21 +34,7 @@ public class BlockConverter implements NodeHandler {
             final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
-            if (forwardMatcher.matches()) {
-                // [impl->dsn~oft-equivalent.forwarding_needed_coverage~1]
-                context.getSpecListBuilder().endSpecificationItem();
-                context.getSpecListBuilder().beginSpecificationItem();
-                context.getSpecListBuilder().setForwards(true);
-                SpecificationItemId coveredId = SpecificationItemId.parseId(forwardMatcher.group("coveredId"));
-                context.getSpecListBuilder().addCoveredId(coveredId);
-                context.getSpecListBuilder().setId(SpecificationItemId.createId(forwardMatcher.group("forwardingType"), coveredId.getName(), coveredId.getRevision()));
-                String[] needsTypes = forwardMatcher.group("needsList").split(",");
-                for (String needsType : needsTypes) {
-                    context.getSpecListBuilder().addNeededArtifactType(needsType.trim());
-                }
-                context.getSpecListBuilder().endSpecificationItem();
-                context.setState(SpecificationConverter.State.START);
-            } else if (needsMatcher.matches()) {
+            if (needsMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.needs~1]
                 for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
                     context.getSpecListBuilder().addNeededArtifactType(artifactType);

@@ -34,7 +34,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         handlers.add(new ListHandler());
         handlers.add(new BlockHandler(
                 new ExampleHandler(),
-                new SpecificationItemIdHandler()
+                new SpecificationItemIdHandler(),
+                new ForwardHandler()
         ));
         handlers.add(new BlockConverter());
     }

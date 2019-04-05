@@ -1,6 +1,8 @@
 package com.github.avonengel.adocspec;
 
-import org.asciidoctor.ast.*;
+import org.asciidoctor.ast.ContentNode;
+import org.asciidoctor.ast.Cursor;
+import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.converter.AbstractConverter;
 import org.itsallcode.openfasttrace.core.SpecificationItem;
 import org.itsallcode.openfasttrace.exporter.specobject.SpecobjectWriterExporterFactory;
@@ -20,17 +22,6 @@ import java.util.stream.Stream;
 public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
-
-    enum State {
-        START,
-        SPEC,
-        COVERS,
-        RATIONALE,
-        COMMENT,
-        DESCRIPTION,
-        DEPENDS,
-    }
-
     private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
     private ConversionContext context = new ConversionContext(specListBuilder);
     private java.util.List<NodeHandler> handlers = new LinkedList<>();
@@ -64,7 +55,6 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         return "node type: " + node.getClass() + " node name: " + node.getNodeName() + "\n";
     }
 
-
     private void logConvertCall(ContentNode node, String transform, Map<Object, Object> opts) {
         if (node instanceof StructuralNode) {
             final Cursor sourceLocation = ((StructuralNode) node).getSourceLocation();
@@ -81,5 +71,15 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         try (Writer w = new OutputStreamWriter(out, Charset.forName("UTF-8"))) {
             exporterFactory.createExporter(w, specStream).runExport();
         }
+    }
+
+    enum State {
+        START,
+        SPEC,
+        COVERS,
+        RATIONALE,
+        COMMENT,
+        DESCRIPTION,
+        DEPENDS,
     }
 }

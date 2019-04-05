@@ -23,7 +23,8 @@ public class PhraseConverter implements NodeHandler {
             LOG.info("phrase nodename {}", phrase.getNodeName());
             LOG.info("phrase role {}", phrase.getRoles());
 
-            return Optional.of(phrase.getText());
+            // inline anchors are represented as Phrase - they have null text attributes
+            return Optional.ofNullable(phrase.getText());
         }
         return null;
     }

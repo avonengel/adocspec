@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BlockConverter implements NodeHandler {
-    private static final Pattern DESCRIPTION_PATTERN = Pattern.compile(MdPattern.DESCRIPTION.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern RATIONALE_PATTERN = Pattern.compile(MdPattern.RATIONALE.getPattern().pattern() + "(.*)", Pattern.DOTALL);
     private static final Pattern COMMENT_PATTERN = Pattern.compile(MdPattern.COMMENT.getPattern().pattern() + "(.*)", Pattern.DOTALL);
 
@@ -20,7 +19,6 @@ public class BlockConverter implements NodeHandler {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
 
-            final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
             final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
             final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
             final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
@@ -28,11 +26,7 @@ public class BlockConverter implements NodeHandler {
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
 
-            if (descriptionMatcher.matches()) {
-                // [impl->dsn~oft-equivalent.description~2]
-                context.setState(SpecificationConverter.State.DESCRIPTION);
-                appendTextBlock(descriptionMatcher.group(1), context);
-            } else if (commentMatcher.matches()) {
+            if (commentMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.comment~1]
                 context.setState(SpecificationConverter.State.COMMENT);
                 appendTextBlock(commentMatcher.group(1), context);

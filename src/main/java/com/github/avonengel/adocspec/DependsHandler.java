@@ -28,7 +28,8 @@ public class DependsHandler extends ListHandler implements BlockContentHandler {
         final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(content);
         if (dependsMatcher.matches()) {
             context.setState(SpecificationConverter.State.DEPENDS);
+            return Optional.empty();
         }
-        return Optional.empty();
+        return null;
     }
 }

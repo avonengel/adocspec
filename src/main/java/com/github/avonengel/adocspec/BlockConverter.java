@@ -16,13 +16,10 @@ public class BlockConverter implements NodeHandler {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
 
-            final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
 
-            if (dependsMatcher.matches()) {
-                context.setState(SpecificationConverter.State.DEPENDS);
-            } else if (statusMatcher.matches()) {
+            if (statusMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.status~1]
                 context.getSpecListBuilder().setStatus(ItemStatus.parseString(statusMatcher.group(1)));
             } else {

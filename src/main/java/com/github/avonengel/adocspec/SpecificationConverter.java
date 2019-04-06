@@ -29,11 +29,12 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     {
         final CoversHandler coversHandler = new CoversHandler();
+        final DependsHandler dependsHandler = new DependsHandler();
         handlers.add(new DocumentHandler());
         handlers.add(new SectionHandler());
         handlers.add(new PhraseConverter());
-        handlers.add(new ListHandler());
         handlers.add(coversHandler);
+        handlers.add(dependsHandler);
         handlers.add(new BlockHandler(
                 new ExampleHandler(),
                 new SpecificationItemIdHandler(),
@@ -43,7 +44,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 new DescriptionHandler(),
                 new CommentHandler(),
                 new RationaleHandler(),
-                coversHandler
+                coversHandler,
+                dependsHandler
         ));
         handlers.add(new BlockConverter());
     }

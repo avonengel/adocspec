@@ -20,7 +20,6 @@ public class DependsHandler extends ListHandler implements BlockContentHandler {
         }
 
         return null;
-
     }
 
     @Override

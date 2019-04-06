@@ -2,11 +2,8 @@ package com.github.avonengel.adocspec;
 
 import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.ContentNode;
-import org.itsallcode.openfasttrace.core.ItemStatus;
-import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 
 import java.util.Optional;
-import java.util.regex.Matcher;
 
 public class BlockConverter implements NodeHandler {
 
@@ -16,15 +13,7 @@ public class BlockConverter implements NodeHandler {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
 
-            final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
-
-
-            if (statusMatcher.matches()) {
-                // [impl->dsn~oft-equivalent.status~1]
-                context.getSpecListBuilder().setStatus(ItemStatus.parseString(statusMatcher.group(1)));
-            } else {
-                appendTextBlock(convertedBlock, context);
-            }
+            appendTextBlock(convertedBlock, context);
         }
         return null;
     }

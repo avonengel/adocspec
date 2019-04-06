@@ -28,10 +28,12 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     private java.util.List<NodeHandler> handlers = new LinkedList<>();
 
     {
+        final CoversHandler coversHandler = new CoversHandler();
         handlers.add(new DocumentHandler());
         handlers.add(new SectionHandler());
         handlers.add(new PhraseConverter());
         handlers.add(new ListHandler());
+        handlers.add(coversHandler);
         handlers.add(new BlockHandler(
                 new ExampleHandler(),
                 new SpecificationItemIdHandler(),
@@ -40,7 +42,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 new TagsHandler(),
                 new DescriptionHandler(),
                 new CommentHandler(),
-                new RationaleHandler()
+                new RationaleHandler(),
+                coversHandler
         ));
         handlers.add(new BlockConverter());
     }

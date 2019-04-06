@@ -13,23 +13,18 @@ import java.util.regex.Matcher;
 public class ListHandler implements NodeHandler {
     @Override
     public Optional<Object> handleNode(ContentNode node, ConversionContext context) {
-        if (node instanceof List) {
+        if (node instanceof List && context.getState() == SpecificationConverter.State.DEPENDS) {
             List list = (List) node;
-            if (context.getState() == SpecificationConverter.State.COVERS) {
-                // [impl->dsn~oft-equivalent.covers~1]
-                readSpecificationItemIdList(list, context.getSpecListBuilder()::addCoveredId);
-                context.setState(SpecificationConverter.State.SPEC);
-            } else if (context.getState() == SpecificationConverter.State.DEPENDS) {
-                // [impl->dsn~oft-equivalent.depends-list~1]
-                readSpecificationItemIdList(list, context.getSpecListBuilder()::addDependsOnId);
-                context.setState(SpecificationConverter.State.SPEC);
-            }
+            // [impl->dsn~oft-equivalent.depends-list~1]
+            readSpecificationItemIdList(list, context.getSpecListBuilder()::addDependsOnId);
+            context.setState(SpecificationConverter.State.SPEC);
             return Optional.empty();
         }
+
         return null;
     }
 
-    private void readSpecificationItemIdList(List list, Consumer<SpecificationItemId> idConsumer) {
+    void readSpecificationItemIdList(List list, Consumer<SpecificationItemId> idConsumer) {
         for (StructuralNode item : list.getItems()) {
             if (item instanceof ListItem) {
                 ListItem listItem = (ListItem) item;

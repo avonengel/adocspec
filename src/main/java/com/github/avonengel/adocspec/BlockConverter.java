@@ -7,7 +7,6 @@ import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class BlockConverter implements NodeHandler {
 
@@ -17,14 +16,11 @@ public class BlockConverter implements NodeHandler {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
 
-            final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
             final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
 
-            if (coversMatcher.matches()) {
-                context.setState(SpecificationConverter.State.COVERS);
-            } else if (dependsMatcher.matches()) {
+            if (dependsMatcher.matches()) {
                 context.setState(SpecificationConverter.State.DEPENDS);
             } else if (statusMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.status~1]

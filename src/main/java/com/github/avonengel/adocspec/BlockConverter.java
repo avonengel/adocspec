@@ -20,7 +20,6 @@ public class BlockConverter implements NodeHandler {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
 
-            final Matcher tagsMatcher = MdPattern.TAGS_INT.getPattern().matcher(convertedBlock);
             final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
             final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
             final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
@@ -28,12 +27,8 @@ public class BlockConverter implements NodeHandler {
             final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
-            if (tagsMatcher.matches()) {
-                // [impl->dsn~oft-equivalent.tags~1]
-                for (final String tag : tagsMatcher.group(1).split(",\\s*")) {
-                    context.getSpecListBuilder().addTag(tag);
-                }
-            } else if (descriptionMatcher.matches()) {
+
+            if (descriptionMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.description~2]
                 context.setState(SpecificationConverter.State.DESCRIPTION);
                 appendTextBlock(descriptionMatcher.group(1), context);

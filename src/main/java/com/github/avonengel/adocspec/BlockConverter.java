@@ -2,14 +2,9 @@ package com.github.avonengel.adocspec;
 
 import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.ContentNode;
-import org.asciidoctor.ast.Cursor;
-import org.asciidoctor.ast.StructuralNode;
 import org.itsallcode.openfasttrace.core.ItemStatus;
-import org.itsallcode.openfasttrace.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.importer.markdown.MdPattern;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +20,6 @@ public class BlockConverter implements NodeHandler {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
 
-            final Matcher needsMatcher = MdPattern.NEEDS_INT.getPattern().matcher(convertedBlock);
             final Matcher tagsMatcher = MdPattern.TAGS_INT.getPattern().matcher(convertedBlock);
             final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(convertedBlock);
             final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
@@ -34,12 +28,7 @@ public class BlockConverter implements NodeHandler {
             final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
-            if (needsMatcher.matches()) {
-                // [impl->dsn~oft-equivalent.needs~1]
-                for (final String artifactType : needsMatcher.group(1).split(",\\s*")) {
-                    context.getSpecListBuilder().addNeededArtifactType(artifactType);
-                }
-            } else if (tagsMatcher.matches()) {
+            if (tagsMatcher.matches()) {
                 // [impl->dsn~oft-equivalent.tags~1]
                 for (final String tag : tagsMatcher.group(1).split(",\\s*")) {
                     context.getSpecListBuilder().addTag(tag);

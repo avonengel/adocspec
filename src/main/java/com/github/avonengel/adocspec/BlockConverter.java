@@ -10,8 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BlockConverter implements NodeHandler {
-    private static final Pattern RATIONALE_PATTERN = Pattern.compile(MdPattern.RATIONALE.getPattern().pattern() + "(.*)", Pattern.DOTALL);
-    private static final Pattern COMMENT_PATTERN = Pattern.compile(MdPattern.COMMENT.getPattern().pattern() + "(.*)", Pattern.DOTALL);
 
     @Override
     public Optional<Object> handleNode(ContentNode node, ConversionContext context) {
@@ -19,22 +17,12 @@ public class BlockConverter implements NodeHandler {
             Block block = (Block) node;
             final String convertedBlock = block.getContent().toString();
 
-            final Matcher rationaleMatcher = RATIONALE_PATTERN.matcher(convertedBlock);
-            final Matcher commentMatcher = COMMENT_PATTERN.matcher(convertedBlock);
             final Matcher coversMatcher = MdPattern.COVERS.getPattern().matcher(convertedBlock);
             final Matcher dependsMatcher = MdPattern.DEPENDS.getPattern().matcher(convertedBlock);
             final Matcher statusMatcher = MdPattern.STATUS.getPattern().matcher(convertedBlock);
 
 
-            if (commentMatcher.matches()) {
-                // [impl->dsn~oft-equivalent.comment~1]
-                context.setState(SpecificationConverter.State.COMMENT);
-                appendTextBlock(commentMatcher.group(1), context);
-            } else if (rationaleMatcher.matches()) {
-                // [impl->dsn~oft-equivalent.rationale~1]
-                context.setState(SpecificationConverter.State.RATIONALE);
-                appendTextBlock(rationaleMatcher.group(1), context);
-            } else if (coversMatcher.matches()) {
+            if (coversMatcher.matches()) {
                 context.setState(SpecificationConverter.State.COVERS);
             } else if (dependsMatcher.matches()) {
                 context.setState(SpecificationConverter.State.DEPENDS);

@@ -26,7 +26,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
     private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
     private final ConversionContext context = new ConversionContext(specListBuilder);
-    private final java.util.List<NodeHandler> handlers;
+    private final List<NodeHandler> handlers;
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
         super(backend, opts);
@@ -34,7 +34,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
         this.handlers = buildHandlerList();
     }
 
-    private java.util.List<NodeHandler> buildHandlerList() {
+    private List<NodeHandler> buildHandlerList() {
         final List<NodeHandler> handlers = new LinkedList<>();
         final CoversHandler coversHandler = new CoversHandler();
         final DependsHandler dependsHandler = new DependsHandler();

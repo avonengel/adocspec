@@ -86,7 +86,6 @@ class SpecificationConverterTest {
 
     @Test
     @DisplayName("When a Spec is created, then source file and line are set")
-    @SuppressWarnings("unchecked")
     void whenSpecIsCreatedThenSourceFileLine(@TempDir Path sourceDirectory) throws IOException {
         // Arrange
         final Path sourceFile = sourceDirectory.resolve("source.adoc");

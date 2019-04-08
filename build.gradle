@@ -54,6 +54,7 @@ asciidoctor {
     ]
 }
 
+//noinspection UnnecessaryQualifiedReference
 task oftAdocspec(type: org.asciidoctor.gradle.AsciidoctorTask) {
     inputs.files(classes)
     sourceDir = file('src/test/resources/oft')
@@ -77,6 +78,7 @@ dependencies {
 }
 
 javadoc {
+    // NOTE: does not work with JDK 9+: https://github.com/asciidoctor/asciidoclet/issues/71
     def overviewFile = 'src/main/java/overview.adoc'
     inputs.file(overviewFile)
     options.docletpath = configurations.asciidoclet.files.asType(List)

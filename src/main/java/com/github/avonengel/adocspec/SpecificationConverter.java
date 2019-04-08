@@ -16,6 +16,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -25,9 +26,16 @@ public class SpecificationConverter extends AbstractConverter<Object> {
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
     private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
     private ConversionContext context = new ConversionContext(specListBuilder);
-    private java.util.List<NodeHandler> handlers = new LinkedList<>();
+    private java.util.List<NodeHandler> handlers;
 
-    {
+    public SpecificationConverter(String backend, Map<String, Object> opts) {
+        super(backend, opts);
+        setOutfileSuffix(".xml");
+        this.handlers = buildHandlerList();
+    }
+
+    private java.util.List<NodeHandler> buildHandlerList() {
+        final List<NodeHandler> handlers = new LinkedList<>();
         final CoversHandler coversHandler = new CoversHandler();
         final DependsHandler dependsHandler = new DependsHandler();
         handlers.add(new DocumentHandler());
@@ -49,11 +57,7 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 new StatusHandler(),
                 new UnqualifiedBlockHandler()
         ));
-    }
-
-    public SpecificationConverter(String backend, Map<String, Object> opts) {
-        super(backend, opts);
-        setOutfileSuffix(".xml");
+        return handlers;
     }
 
     @Override

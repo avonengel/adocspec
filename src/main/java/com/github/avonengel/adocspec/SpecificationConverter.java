@@ -46,9 +46,9 @@ public class SpecificationConverter extends AbstractConverter<Object> {
                 new RationaleHandler(),
                 coversHandler,
                 dependsHandler,
-                new StatusHandler()
+                new StatusHandler(),
+                new UnqualifiedBlockHandler()
         ));
-        handlers.add(new BlockConverter());
     }
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {

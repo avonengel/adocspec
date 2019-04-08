@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-public class SpecTreeProcessor extends Treeprocessor {
+class SpecTreeProcessor extends Treeprocessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecTreeProcessor.class);
-    private List<SpecificationItem> specificationItems = new LinkedList<>();
+    private final List<SpecificationItem> specificationItems = new LinkedList<>();
 
     @Override
     public Document process(Document document) {

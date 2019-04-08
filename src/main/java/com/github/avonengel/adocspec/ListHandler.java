@@ -1,12 +1,10 @@
 package com.github.avonengel.adocspec;
 
-import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.List;
 import org.asciidoctor.ast.ListItem;
 import org.asciidoctor.ast.StructuralNode;
 import org.itsallcode.openfasttrace.core.SpecificationItemId;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 

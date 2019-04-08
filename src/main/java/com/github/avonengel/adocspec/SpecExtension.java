@@ -12,7 +12,7 @@ public class SpecExtension implements ExtensionRegistry {
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         // tag::register[]
         javaExtensionRegistry.preprocessor(SourcemapPreprocessor.class);
-        javaExtensionRegistry.treeprocessor(SpecTreeProcessor.class);
+//        javaExtensionRegistry.treeprocessor(SpecTreeProcessor.class);
         asciidoctor.javaConverterRegistry().register(SpecificationConverter.class, "spec"); // <1>
         // end::register[]
     }

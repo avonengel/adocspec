@@ -4,6 +4,6 @@ import org.asciidoctor.ast.ContentNode;
 
 import java.util.Optional;
 
-public interface NodeHandler {
+interface NodeHandler {
     Optional<Object> handleNode(ContentNode node, ConversionContext context);
 }

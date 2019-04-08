@@ -1,6 +1,6 @@
 package com.github.avonengel.adocspec;
 
-public class ConversionContext {
+class ConversionContext {
     private final BlockSpecListBuilder specListBuilder;
     private SpecificationConverter.State currentState = SpecificationConverter.State.START;
 

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class BlockHandler implements NodeHandler {
-    private List<BlockContentHandler> blockContentHandlers;
+    private final List<BlockContentHandler> blockContentHandlers;
 
     public BlockHandler(BlockContentHandler... blockContentHandlers) {
         this.blockContentHandlers = Arrays.asList(blockContentHandlers);

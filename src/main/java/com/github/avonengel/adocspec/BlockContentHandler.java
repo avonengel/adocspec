@@ -4,8 +4,8 @@ import org.asciidoctor.ast.Block;
 
 import java.util.Optional;
 
-public interface BlockContentHandler {
-    public Optional<Object> handleNode(Block block, String content, ConversionContext context);
+interface BlockContentHandler {
+    Optional<Object> handleNode(Block block, String content, ConversionContext context);
 
     default void appendTextBlock(String content, ConversionContext context) {
         if (content.trim().isEmpty()) {

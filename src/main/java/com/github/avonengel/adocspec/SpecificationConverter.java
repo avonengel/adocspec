@@ -25,8 +25,8 @@ public class SpecificationConverter extends AbstractConverter<Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpecificationConverter.class);
     private final BlockSpecListBuilder specListBuilder = new BlockSpecListBuilder(SpecificationListBuilder.create());
-    private ConversionContext context = new ConversionContext(specListBuilder);
-    private java.util.List<NodeHandler> handlers;
+    private final ConversionContext context = new ConversionContext(specListBuilder);
+    private final java.util.List<NodeHandler> handlers;
 
     public SpecificationConverter(String backend, Map<String, Object> opts) {
         super(backend, opts);

@@ -22,7 +22,7 @@ import static org.asciidoctor.Asciidoctor.Factory.create;
 import static org.asciidoctor.OptionsBuilder.options;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SnapshotTest {
+class SnapshotTest {
 
     private static Asciidoctor asciidoctor;
 

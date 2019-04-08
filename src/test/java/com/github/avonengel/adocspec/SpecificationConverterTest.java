@@ -95,7 +95,6 @@ class SpecificationConverterTest {
         // Act
         asciidoctor.convertFile(sourceFile.toFile(), OptionsBuilder.options().backend("spec"));
         // when converting to file, AsciiDoctorJ returns null
-        Path outputFile = sourceDirectory.resolve("source.xml");
         final ImportSettings settings = ImportSettings.builder().addInputs(sourceDirectory).build();
         final List<SpecificationItem> result = Oft.create().importItems(settings);
 

@@ -8,8 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -20,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("A SpecObject")
 class SpecTreeProcessorTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SpecTreeProcessorTest.class);
     private static final SpecificationItemId TEST_ID = SpecificationItemId.createId("tst", "test-spec-id", 1);
 
     private static Asciidoctor asciidoctor;
@@ -46,7 +43,7 @@ class SpecTreeProcessorTest {
                 "== A specification section";
 
         // Act
-        String output = asciidoctor.convert(input, options().toFile(false));
+        asciidoctor.convert(input, options().toFile(false));
 
         // Assert
         List<SpecificationItem> specObjects = underTest.getSpecObjects();
@@ -66,7 +63,7 @@ class SpecTreeProcessorTest {
                     "== A specification section";
 
             // Act
-            String output = asciidoctor.convert(input, options().toFile(false));
+            asciidoctor.convert(input, options().toFile(false));
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
@@ -89,7 +86,7 @@ class SpecTreeProcessorTest {
                     dummyDescription;
 
             // Act
-            String output = asciidoctor.convert(input, options().toFile(false));
+            asciidoctor.convert(input, options().toFile(false));
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
@@ -112,7 +109,7 @@ class SpecTreeProcessorTest {
                     "Needs: " + dummyType;
 
             // Act
-            String output = asciidoctor.convert(input, options().toFile(false));
+            asciidoctor.convert(input, options().toFile(false));
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
@@ -157,7 +154,7 @@ class SpecTreeProcessorTest {
                     "* $$" + dummyCovers + "$$";
 
             // Act
-            String output = asciidoctor.convert(input, options().toFile(false));
+            asciidoctor.convert(input, options().toFile(false));
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
@@ -178,7 +175,7 @@ class SpecTreeProcessorTest {
                     "* +++" + dummyCovers + "+++";
 
             // Act
-            String output = asciidoctor.convert(input, options().toFile(false));
+            asciidoctor.convert(input, options().toFile(false));
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
@@ -199,7 +196,7 @@ class SpecTreeProcessorTest {
                     "* pass:[" + dummyCovers + "]";
 
             // Act
-            String output = asciidoctor.convert(input, options().toFile(false));
+            asciidoctor.convert(input, options().toFile(false));
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();
@@ -220,7 +217,7 @@ class SpecTreeProcessorTest {
                     "* ++" + dummyCovers + "++";
 
             // Act
-            String output = asciidoctor.convert(input, options().toFile(false));
+            asciidoctor.convert(input, options().toFile(false));
 
             // Assert
             List<SpecificationItem> specObjects = underTest.getSpecObjects();

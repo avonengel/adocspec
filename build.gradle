@@ -63,7 +63,7 @@ task oftAdocspec(type: org.asciidoctor.gradle.AsciidoctorTask) {
 }
 
 requirementTracing {
-    inputDirectories = files(asciidoctor.outputDir, 'src')
+    inputDirectories = files(asciidoctor.outputDir, 'src/main', 'src/test/java')
     reportFormat = 'html'
 }
 collectRequirements.dependsOn(asciidoctor)

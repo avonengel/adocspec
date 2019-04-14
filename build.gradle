@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.asciidoctor.convert' version '1.5.9.2'
+    id 'org.asciidoctor.jvm.convert' version '2.0.0'
     id "org.itsallcode.openfasttrace" version "0.6.0"
 }
 
@@ -10,15 +10,17 @@ repositories {
 
 version = '0.1.0-SNAPSHOT'
 
-asciidoctorj {
-    version = '1.6.2'
+configurations {
+    asciidoctor {
+        extendsFrom runtimeClasspath
+    }
 }
-configurations.asciidoctor.extendsFrom configurations.implementation
+
 dependencies {
     asciidoctor sourceSets.main.output
     asciidoctor 'ch.qos.logback:logback-classic:1.2.3'
 
-    implementation 'org.asciidoctor:asciidoctorj:1.6.2'
+    compileOnly 'org.asciidoctor:asciidoctorj:1.6.2'
     implementation 'org.itsallcode:openfasttrace:2.2.0'
     implementation 'org.slf4j:slf4j-api:1.7.25'
 
@@ -34,14 +36,21 @@ dependencies {
     testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
 }
 
+tasks.withType(org.asciidoctor.gradle.jvm.AsciidoctorTask) {
+    configurations('asciidoctor')
+    outputOptions {
+        // TODO: task does not re-run when backends change. report bug @GitHub
+        backends = ['html5', 'spec']
+        separateOutputDirs = false
+    }
+}
+
 test {
     useJUnitPlatform()
 }
 
 asciidoctor {
-    backends = ['html5', 'spec']
     outputDir = docsDir
-    separateOutputDirs = false
     attributes << [
             'build-gradle'      : file('build.gradle'),
             'sourcedir'         : project.sourceSets.main.java.srcDirs[0],
@@ -54,13 +63,10 @@ asciidoctor {
     ]
 }
 
-//noinspection UnnecessaryQualifiedReference
-task oftAdocspec(type: org.asciidoctor.gradle.AsciidoctorTask) {
+task oftAdocspec(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
     inputs.files(classes)
     sourceDir = file('src/test/resources/oft')
     outputDir = new File(project.buildDir, 'oft')
-    separateOutputDirs = false
-    backends = ['html5', 'spec']
 }
 
 requirementTracing {

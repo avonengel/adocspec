@@ -34,6 +34,7 @@ dependencies {
 
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
+    testImplementation 'org.asciidoctor:asciidoctorj:1.6.2'
 }
 
 tasks.withType(org.asciidoctor.gradle.jvm.AsciidoctorTask) {

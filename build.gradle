@@ -155,13 +155,19 @@ publishing {
             }
         }
     }
-    repositories {
-        maven {
-            name = 'snapshot'
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-            credentials {
-                username = getProperty('ossrh.username')
-                password = getProperty('ossrh.password')
+    String ossrhUsername = findProperty('ossrh.username')
+    String ossrhPassword = findProperty('ossrh.password')
+    if (ossrhUsername?.isBlank() || ossrhPassword?.isBlank()) {
+        logger.info('No username and/or password found for OSSRH repository, skipping configuration.')
+    } else {
+        repositories {
+            maven {
+                name = 'snapshot'
+                url = "https://oss.sonatype.org/content/repositories/snapshots/"
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
             }
         }
     }

@@ -57,7 +57,6 @@ test {
 }
 
 asciidoctor {
-    outputDir = docsDir
     attributes << [
             'build-gradle'      : file('build.gradle'),
             'sourcedir'         : project.sourceSets.main.java.srcDirs[0],
@@ -89,7 +88,11 @@ task documentation(dependsOn: [javadoc, asciidoctor]) {
 
 task docZip(type: Zip) {
     archiveBaseName = 'documentation'
-    from docsDir
+    from asciidoctor
+    into('javadoc') {
+        from javadoc
+    }
+    duplicatesStrategy = 'EXCLUDE'
 }
 
 task javadocJar(type: Jar) {

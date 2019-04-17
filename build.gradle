@@ -82,29 +82,6 @@ requirementTracing {
 }
 collectRequirements.dependsOn(asciidoctor)
 
-configurations {
-    asciidoclet
-}
-
-dependencies {
-    asciidoclet 'org.asciidoctor:asciidoclet:1.5.6'
-}
-
-//javadoc {
-//    // NOTE: does not work with JDK 9+: https://github.com/asciidoctor/asciidoclet/issues/71
-//    def overviewFile = 'src/main/java/overview.adoc'
-//    inputs.file(overviewFile)
-//    options.docletpath = configurations.asciidoclet.files.asType(List)
-//    options.doclet = 'org.asciidoctor.Asciidoclet'
-//    options.overview = overviewFile
-//    options.addStringOption "-base-dir", "${projectDir}"
-//    options.addStringOption "-attribute",
-//            "version=${project.version}," +
-//                    "gh-url=https://github.com/avonengel/adocspec," +
-//                    "design=../html5/design.html," +
-//                    "src-with-package=src/main/java/com/github/avonengel/adocspec"
-//}
-
 task documentation(dependsOn: [javadoc, asciidoctor]) {
     group 'documentation'
     description 'Creates all documentation'

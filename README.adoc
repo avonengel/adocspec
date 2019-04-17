@@ -11,13 +11,16 @@ endif::[]
 The adocspec project aims at making writing requirements in AsciiDoc format
 possible by using the {oft} tracing toolchain, and extending the syntax they defined for Markdown to AsciiDoc.
 
-== Project Status: Experimental
+== Project Status: Alpha
 
 image:https://circleci.com/gh/avonengel/adocspec.svg?style=svg["CircleCI", link="https://circleci.com/gh/avonengel/adocspec"]
 
-The project is currently in an exploratory status, where different implementation options are being evaluated. While
-requirements may already be specified, not all of the elements used by {oft} are supported, yet.
+The project is currently in alpha status:
+
+* Requirements may already be specified, but not all of the elements used by {oft} are supported, yet.
+* Only paragraph text with standard formatting is supported in requirements' text fields.
+
 See <<src/docs/asciidoc/spec#,the specification>> for an example of what is supported.
 
-All supported elements are tested, so you might take a look at
-link:src/test/java/com/github/avonengel/adocspec/SpecificationConverterTest.java[SpecificationConverterTest].
+All supported elements are tested, so you might take a look at the
+link:src/test/java/com/github/avonengel/adocspec/[tests].

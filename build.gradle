@@ -1,8 +1,14 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id 'signing'
     id 'org.asciidoctor.jvm.convert' version '2.0.0'
     id "org.itsallcode.openfasttrace" version "0.6.0"
 }
+
+group = 'com.github.avonengel'
+description = 'Extension for AsciidoctorJ to specify requirements via OpenFastTrace'
+version = '0.1.0-SNAPSHOT'
 
 repositories {
     jcenter()
@@ -84,20 +90,20 @@ dependencies {
     asciidoclet 'org.asciidoctor:asciidoclet:1.5.6'
 }
 
-javadoc {
-    // NOTE: does not work with JDK 9+: https://github.com/asciidoctor/asciidoclet/issues/71
-    def overviewFile = 'src/main/java/overview.adoc'
-    inputs.file(overviewFile)
-    options.docletpath = configurations.asciidoclet.files.asType(List)
-    options.doclet = 'org.asciidoctor.Asciidoclet'
-    options.overview = overviewFile
-    options.addStringOption "-base-dir", "${projectDir}"
-    options.addStringOption "-attribute",
-            "version=${project.version}," +
-                    "gh-url=https://github.com/avonengel/adocspec," +
-                    "design=../html5/design.html," +
-                    "src-with-package=src/main/java/com/github/avonengel/adocspec"
-}
+//javadoc {
+//    // NOTE: does not work with JDK 9+: https://github.com/asciidoctor/asciidoclet/issues/71
+//    def overviewFile = 'src/main/java/overview.adoc'
+//    inputs.file(overviewFile)
+//    options.docletpath = configurations.asciidoclet.files.asType(List)
+//    options.doclet = 'org.asciidoctor.Asciidoclet'
+//    options.overview = overviewFile
+//    options.addStringOption "-base-dir", "${projectDir}"
+//    options.addStringOption "-attribute",
+//            "version=${project.version}," +
+//                    "gh-url=https://github.com/avonengel/adocspec," +
+//                    "design=../html5/design.html," +
+//                    "src-with-package=src/main/java/com/github/avonengel/adocspec"
+//}
 
 task documentation(dependsOn: [javadoc, asciidoctor]) {
     group 'documentation'
@@ -107,4 +113,60 @@ task documentation(dependsOn: [javadoc, asciidoctor]) {
 task docZip(type: Zip) {
     archiveBaseName = 'documentation'
     from docsDir
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+publishing {
+    publications {
+        adocspec(MavenPublication) {
+            from components.java
+            artifact javadocJar
+            artifact sourcesJar
+            pom {
+                name = "$group:${project.name}"
+                description = project.description
+                url = 'https://github.com/avonengel/adocspec'
+                licenses {
+                    license {
+                        name = 'GNU GENERAL PUBLIC LICENSE, Version 3'
+                        url = 'https://www.gnu.org/licenses/gpl.html'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Axel von Engel'
+                        email = 'a.vonengel@gmail.com'
+                        url = 'https://github.com/avonengel'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/mavonengel/adocspec.git'
+                    developerConnection = 'scm:git:ssh://github.com:avonengel/adocspec.git'
+                    url = 'https://github.com/avonengel/adocspec'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'snapshot'
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            credentials {
+                username = getProperty('ossrh.username')
+                password = getProperty('ossrh.password')
+            }
+        }
+    }
+}
+signing {
+    useGpgCmd()
+    sign publishing.publications.adocspec
 }

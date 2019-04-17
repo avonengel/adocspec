@@ -8,13 +8,13 @@ plugins {
 
 group = 'com.github.avonengel'
 description = 'Extension for AsciidoctorJ to specify requirements via OpenFastTrace'
-version = '0.1.0-SNAPSHOT'
+
+def release = findProperty('release')?.toBoolean()
+version = "0.1.0${release ? '' : '-SNAPSHOT'}"
 
 repositories {
     jcenter()
 }
-
-version = '0.1.0-SNAPSHOT'
 
 configurations {
     asciidoctor {
@@ -157,7 +157,7 @@ publishing {
     }
     String ossrhUsername = findProperty('ossrh.username')
     String ossrhPassword = findProperty('ossrh.password')
-    if (ossrhUsername?.isBlank() || ossrhPassword?.isBlank()) {
+    if (!ossrhUsername?.trim() || !ossrhPassword?.trim()) {
         logger.info('No username and/or password found for OSSRH repository, skipping configuration.')
     } else {
         repositories {
@@ -169,7 +169,23 @@ publishing {
                     password = ossrhPassword
                 }
             }
+            maven {
+                name = 'release'
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
         }
+    }
+}
+tasks.withType(PublishToMavenRepository) {
+    onlyIf {
+        (repository == publishing.repositories.release &&
+                !version.endsWith('-SNAPSHOT')) ||
+                (repository == publishing.repositories.snapshot &&
+                        version.endsWith('-SNAPSHOT'))
     }
 }
 signing {

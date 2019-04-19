@@ -12,7 +12,7 @@ group = 'com.github.avonengel'
 description = 'Extension for AsciidoctorJ to specify requirements via OpenFastTrace'
 
 def release = findProperty('release')?.toBoolean()
-version = "0.1.0${release ? '' : '-SNAPSHOT'}"
+version = "0.2.0${release ? '' : '-SNAPSHOT'}"
 
 repositories {
     jcenter()

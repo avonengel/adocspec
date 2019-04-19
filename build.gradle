@@ -3,8 +3,9 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'org.asciidoctor.jvm.convert' version '2.0.0'
-    id "org.itsallcode.openfasttrace" version "0.6.0"
-    id "io.codearte.nexus-staging" version "0.20.0"
+    id 'org.itsallcode.openfasttrace' version '0.6.0'
+    id 'io.codearte.nexus-staging' version '0.20.0'
+    id 'com.github.hierynomus.license' version '0.15.0'
 }
 
 group = 'com.github.avonengel'
@@ -157,7 +158,7 @@ if (!ossrhUsername?.trim() || !ossrhPassword?.trim()) {
     publishing.repositories {
         maven {
             name = 'snapshot'
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
             credentials {
                 username = ossrhUsername
                 password = ossrhPassword
@@ -165,7 +166,7 @@ if (!ossrhUsername?.trim() || !ossrhPassword?.trim()) {
         }
         maven {
             name = 'release'
-            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
             credentials {
                 username = ossrhUsername
                 password = ossrhPassword
@@ -177,4 +178,13 @@ if (!ossrhUsername?.trim() || !ossrhPassword?.trim()) {
         username = ossrhUsername
         password = ossrhPassword
     }
+}
+
+license {
+    header = file('gradle/license-header.txt')
+    strictCheck = true
+    skipExistingHeaders = false
+    ext.year = 2019
+    ext.name = 'Axel von Engel'
+    ext.email = 'a.vonengel@gmail.com'
 }

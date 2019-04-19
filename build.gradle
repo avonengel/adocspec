@@ -187,5 +187,5 @@ license {
     ext.year = 2019
     ext.name = 'Axel von Engel'
     ext.email = 'a.vonengel@gmail.com'
-    excludes(['oft/*.xml', '*.adoc'])
+    excludes(['oft/*.xml'])
 }

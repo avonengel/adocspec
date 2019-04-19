@@ -4,6 +4,7 @@ plugins {
     id 'signing'
     id 'org.asciidoctor.jvm.convert' version '2.0.0'
     id "org.itsallcode.openfasttrace" version "0.6.0"
+    id "io.codearte.nexus-staging" version "0.20.0"
 }
 
 group = 'com.github.avonengel'
@@ -135,30 +136,6 @@ publishing {
             }
         }
     }
-    String ossrhUsername = findProperty('ossrh.username')
-    String ossrhPassword = findProperty('ossrh.password')
-    if (!ossrhUsername?.trim() || !ossrhPassword?.trim()) {
-        logger.info('No username and/or password found for OSSRH repository, skipping configuration.')
-    } else {
-        repositories {
-            maven {
-                name = 'snapshot'
-                url = "https://oss.sonatype.org/content/repositories/snapshots/"
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
-            maven {
-                name = 'release'
-                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
-        }
-    }
 }
 tasks.withType(PublishToMavenRepository) {
     onlyIf {
@@ -171,4 +148,33 @@ tasks.withType(PublishToMavenRepository) {
 signing {
     useGpgCmd()
     sign publishing.publications.adocspec
+}
+String ossrhUsername = findProperty('ossrh.username')
+String ossrhPassword = findProperty('ossrh.password')
+if (!ossrhUsername?.trim() || !ossrhPassword?.trim()) {
+    logger.info('No username and/or password found for OSSRH repository, skipping configuration.')
+} else {
+    publishing.repositories {
+        maven {
+            name = 'snapshot'
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+        maven {
+            name = 'release'
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+    nexusStaging {
+        packageGroup = 'com.github.avonengel'
+        username = ossrhUsername
+        password = ossrhPassword
+    }
 }

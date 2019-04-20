@@ -14,6 +14,7 @@ jobs:
       - store_test_results:
           path: build/test-results
       - run: ./gradlew --no-daemon documentation traceRequirements docZip
+      - run: ./gradlew --no-daemon uploadCoverage
       - save_cache:
           key: gradle-home-v5-{{ checksum "build.gradle" }}
           paths:

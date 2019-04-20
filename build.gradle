@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
+    id 'jacoco'
     id 'org.asciidoctor.jvm.convert' version '2.0.0'
     id 'org.itsallcode.openfasttrace' version '0.6.0'
     id 'io.codearte.nexus-staging' version '0.20.0'
@@ -19,6 +20,7 @@ repositories {
 }
 
 configurations {
+    codacy
     asciidoctor {
         extendsFrom runtimeClasspath
     }
@@ -43,6 +45,8 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation 'org.asciidoctor:asciidoctorj:1.6.2'
+
+    codacy 'com.codacy:codacy-coverage-reporter:6.0.0'
 }
 
 tasks.withType(org.asciidoctor.gradle.jvm.AsciidoctorTask) {
@@ -188,4 +192,23 @@ license {
     ext.name = 'Axel von Engel'
     ext.email = 'a.vonengel@gmail.com'
     excludes(['oft/*.xml'])
+}
+
+task uploadCoverage(type: JavaExec, dependsOn : jacocoTestReport) {
+    main = "com.codacy.CodacyCoverageReporter"
+    classpath = configurations.codacy
+    args = [
+            "report",
+            "-l",
+            "Java",
+            "-r",
+            jacocoTestReport.reports.xml.destination
+    ]
+    dependsOn jacocoTestReport
+}
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+    dependsOn test
 }

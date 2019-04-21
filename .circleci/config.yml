@@ -15,6 +15,14 @@ jobs:
           path: build/test-results
       - run: ./gradlew documentation traceRequirements docZip
       - run: ./gradlew uploadCoverage
+      - when:
+          condition: << CIRCLE_PR_NUMBER >>
+          steps:
+            - run: ./gradlew sonarqube -Dsonar.login=$SONAR_LOGIN -Dsonar.pullrequest.key=$CIRCLE_PR_NUMBER -Dsonar.pullrequest.branch=$CIRCLE_BRANCH
+      - unless:
+          condition: << CIRCLE_PR_NUMBER >>
+          steps:
+            - run: ./gradlew sonarqube -Dsonar.login=$SONAR_LOGIN -Dsonar.branch.name=$CIRCLE_BRANCH
       - save_cache:
           key: gradle-home-v6-{{ checksum "build.gradle" }}
           paths:

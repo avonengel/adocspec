@@ -15,6 +15,20 @@ jobs:
           path: build/test-results
       - run: ./gradlew documentation traceRequirements docZip
       - run: ./gradlew uploadCoverage
+      - run:
+          name: sonarqube
+          command: |
+            # Workaround for CIRCLE_PR_NUMBER, see https://discuss.circleci.com/t/circle-pr-number-missing-from-environment-variables/3745/4
+            echo 'export CIRCLE_PR_NUMBER="${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}"' >> $BASH_ENV
+            source $BASH_ENV
+            echo "CIRCLE_PR_NUMBER: $CIRCLE_PR_NUMBER"
+            echo "CIRCLE_BRANCH: $CIRCLE_BRANCH"
+            if [[ -z "${CIRCLE_PR_NUMBER}" ]]; then
+              export SONAR_ARGS="-Dsonar.branch.name=$CIRCLE_BRANCH"
+            else
+              export SONAR_ARGS="-Dsonar.pullrequest.key=$CIRCLE_PR_NUMBER -Dsonar.pullrequest.branch=$CIRCLE_BRANCH"
+            fi
+            ./gradlew -is sonarqube -Dsonar.login=$SONAR_LOGIN $SONAR_ARGS
       - save_cache:
           key: gradle-home-v6-{{ checksum "build.gradle" }}
           paths:

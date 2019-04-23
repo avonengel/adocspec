@@ -13,7 +13,7 @@ possible by using the {oft} tracing toolchain, and extending the syntax they def
 
 == Project Status: Alpha
 
-image:https://circleci.com/gh/avonengel/adocspec.svg?style=svg["CircleCI", link="https://circleci.com/gh/avonengel/adocspec"]
+image:https://circleci.com/gh/avonengel/adocspec.svg?style=svg["CircleCI", link="https://circleci.com/gh/avonengel/adocspec"] image:https://sonarcloud.io/api/project_badges/measure?project=avonengel_adocspec&metric=alert_status["Quality Gate Status", link="https://sonarcloud.io/dashboard?id=avonengel_adocspec"] image:https://sonarcloud.io/api/project_badges/measure?project=avonengel_adocspec&metric=coverage["Coverage" link="https://sonarcloud.io/dashboard?id=avonengel_adocspec"]
 
 The project is currently in alpha status:
 

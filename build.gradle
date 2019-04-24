@@ -21,7 +21,6 @@ repositories {
 }
 
 configurations {
-    codacy
     asciidoctor {
         extendsFrom runtimeClasspath
     }
@@ -46,8 +45,6 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation 'org.asciidoctor:asciidoctorj:1.6.2'
-
-    codacy 'com.codacy:codacy-coverage-reporter:6.0.0'
 }
 
 tasks.withType(org.asciidoctor.gradle.jvm.AsciidoctorTask) {
@@ -193,19 +190,6 @@ license {
     ext.name = 'Axel von Engel'
     ext.email = 'a.vonengel@gmail.com'
     excludes(['oft/*.xml'])
-}
-
-task uploadCoverage(type: JavaExec, dependsOn: jacocoTestReport) {
-    main = "com.codacy.CodacyCoverageReporter"
-    classpath = configurations.codacy
-    args = [
-            "report",
-            "-l",
-            "Java",
-            "-r",
-            jacocoTestReport.reports.xml.destination
-    ]
-    dependsOn jacocoTestReport
 }
 
 jacocoTestReport {

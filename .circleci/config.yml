@@ -14,7 +14,6 @@ jobs:
       - store_test_results:
           path: build/test-results
       - run: ./gradlew documentation traceRequirements docZip
-      - run: ./gradlew uploadCoverage
       - run:
           name: sonarqube
           command: |
